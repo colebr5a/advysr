@@ -17,6 +17,65 @@ const DEFAULT_ACCOUNTS = [
 let accId = 10;
 let entryCtr = 5000;
 
+const ACCOUNT_COLORS = ['#16a34a','#22c55e','#4ade80','#86efac','#a3e635','#facc15','#fb923c','#f87171'];
+
+function NetWorthPieChart({ accounts, totalAssets }) {
+  const size = 220;
+  const cx = size / 2;
+  const cy = size / 2;
+  const r = 80;
+  const inner = 48;
+  const filtered = accounts.filter(a => (a.balance || 0) > 0);
+
+  if (filtered.length === 0 || totalAssets === 0) {
+    return (
+      <div className="flex items-center justify-center" style={{ width: size, height: size }}>
+        <svg width={size} height={size}>
+          <circle cx={cx} cy={cy} r={r} fill="none" stroke="#333" strokeWidth={r - inner} />
+        </svg>
+        <div className="absolute text-center">
+          <p className="text-xs text-gray-500">No data</p>
+        </div>
+      </div>
+    );
+  }
+
+  let cumAngle = -Math.PI / 2;
+  const slices = filtered.map((acc, i) => {
+    const pct = acc.balance / totalAssets;
+    const angle = pct * 2 * Math.PI;
+    const start = cumAngle;
+    cumAngle += angle;
+    return { acc, pct, startAngle: start, endAngle: cumAngle, color: ACCOUNT_COLORS[i % ACCOUNT_COLORS.length] };
+  });
+
+  function arcPath(startAngle, endAngle, outerR, innerR) {
+    const x1 = cx + outerR * Math.cos(startAngle);
+    const y1 = cy + outerR * Math.sin(startAngle);
+    const x2 = cx + outerR * Math.cos(endAngle);
+    const y2 = cy + outerR * Math.sin(endAngle);
+    const x3 = cx + innerR * Math.cos(endAngle);
+    const y3 = cy + innerR * Math.sin(endAngle);
+    const x4 = cx + innerR * Math.cos(startAngle);
+    const y4 = cy + innerR * Math.sin(startAngle);
+    const large = endAngle - startAngle > Math.PI ? 1 : 0;
+    return `M ${x1} ${y1} A ${outerR} ${outerR} 0 ${large} 1 ${x2} ${y2} L ${x3} ${y3} A ${innerR} ${innerR} 0 ${large} 0 ${x4} ${y4} Z`;
+  }
+
+  return (
+    <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
+      <svg width={size} height={size}>
+        {slices.map((s, i) => (
+          <path key={i} d={arcPath(s.startAngle, s.endAngle, r, inner)} fill={s.color} stroke="#1a1a1a" strokeWidth={2} />
+        ))}
+      </svg>
+      <div className="absolute text-center pointer-events-none">
+        <p className="text-xs text-gray-400">Net Worth</p>
+      </div>
+    </div>
+  );
+}
+
 export function HomePage({ profile, onProfileUpdate }) {
   const currentMonthIndex = new Date().getMonth();
   const [activeMonth, setActiveMonth] = useState(currentMonthIndex);
@@ -111,18 +170,33 @@ export function HomePage({ profile, onProfileUpdate }) {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8 space-y-8">
       {/* Net Worth Hero */}
-      <Card className="bg-gradient-to-br from-primary-600 to-primary-700 !border-0 text-white">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-primary-200 text-sm font-medium mb-1">Total Net Worth</p>
-            <p className={`text-5xl font-bold ${netWorth < 0 ? 'text-red-300' : 'text-white'}`}>{fmt(netWorth)}</p>
-            <div className="flex gap-6 mt-3 text-sm text-primary-200">
+      <Card className="!border-0 text-white" style={{ background: '#242424' }}>
+        <div className="flex flex-col sm:flex-row items-center gap-6">
+          {/* Pie chart */}
+          <div className="flex-shrink-0">
+            <NetWorthPieChart accounts={accounts} totalAssets={totalAssets} />
+          </div>
+          {/* Right side */}
+          <div className="flex-1 w-full">
+            <p className="text-gray-400 text-sm font-medium mb-1">Total Net Worth</p>
+            <p className={`text-4xl font-bold mb-4 ${netWorth < 0 ? 'text-red-400' : 'text-white'}`}>{fmt(netWorth)}</p>
+            <div className="flex gap-6 mb-4 text-sm text-gray-400">
               <span>Assets: <span className="text-white font-semibold">{fmt(totalAssets)}</span></span>
               <span>Debt: <span className="text-white font-semibold">{fmt(totalDebt)}</span></span>
             </div>
-          </div>
-          <div className="text-right text-primary-200 text-sm">
-            <p>{new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+            {/* Legend */}
+            <div className="grid grid-cols-2 gap-x-6 gap-y-2">
+              {accounts.filter(a => (a.balance || 0) > 0).map((acc, i) => {
+                const pct = totalAssets > 0 ? Math.round((acc.balance / totalAssets) * 100) : 0;
+                return (
+                  <div key={acc.id} className="flex items-center gap-2 text-sm">
+                    <div className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ background: ACCOUNT_COLORS[i % ACCOUNT_COLORS.length] }} />
+                    <span className="text-gray-400 truncate">{acc.label}</span>
+                    <span className="text-white font-semibold ml-auto">{pct}%</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </Card>
