@@ -3,6 +3,7 @@ export function NavBar({ activePage, onNavigate, onEditProfile, onReset, onLogou
     { id: 'home',      label: 'Home' },
     { id: 'goals',     label: 'Goals' },
     { id: 'investing', label: 'Investing' },
+    { id: 'research',  label: 'Research' },
     ...(isAdmin ? [{ id: 'admin', label: 'Admin' }] : []),
   ];
 

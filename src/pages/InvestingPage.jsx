@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+
 import { Card } from '../components/ui/Card.jsx';
 import { fmt } from '../utils/formatters.js';
 import { monthlySurplus, totalExpenses } from '../utils/calculations.js';
@@ -392,10 +392,6 @@ export function InvestingPage({ profile }) {
         Educational guidance only — not financial advice. Consult a licensed financial advisor before investing.
       </p>
 
-      {/* Research panel */}
-      <Card>
-        <ResearchPanel profile={profile} surplus={surplus} />
-      </Card>
     </main>
   );
 }
