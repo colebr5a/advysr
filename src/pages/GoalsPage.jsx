@@ -205,7 +205,7 @@ export function GoalsPage({ profile, onProfileUpdate }) {
                         type="number" min="0"
                         value={g.targetAmount || ''}
                         onChange={e => updateGoal(g.id, 'targetAmount', Number(e.target.value) || 0)}
-                        className="w-20 text-right font-semibold border border-gray-200 rounded-lg px-2 py-0.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-400"
+                        className="w-20 text-right font-semibold border border-gray-200 rounded-lg px-2 py-0.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-400 bg-white text-gray-900"
                       />
                     </div>
                   </div>
@@ -216,7 +216,7 @@ export function GoalsPage({ profile, onProfileUpdate }) {
                         type="number" min="1"
                         value={g.targetMonths || ''}
                         onChange={e => updateGoal(g.id, 'targetMonths', Number(e.target.value) || 1)}
-                        className="w-16 text-right font-semibold border border-gray-200 rounded-lg px-2 py-0.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-400"
+                        className="w-16 text-right font-semibold border border-gray-200 rounded-lg px-2 py-0.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-400 bg-white text-gray-900"
                       />
                       <span className="text-gray-400 text-xs">mo</span>
                     </div>
@@ -258,7 +258,7 @@ export function GoalsPage({ profile, onProfileUpdate }) {
                         value={form.amount || ''}
                         onChange={e => setEntryForms(f => ({ ...f, [g.id]: { ...f[g.id], amount: e.target.value } }))}
                         placeholder="Amount"
-                        className="w-full pl-5 pr-2 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-400"
+                        className="w-full pl-5 pr-2 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-400 bg-white text-gray-900"
                       />
                     </div>
                     <button
@@ -271,7 +271,7 @@ export function GoalsPage({ profile, onProfileUpdate }) {
                     value={form.note || ''}
                     onChange={e => setEntryForms(f => ({ ...f, [g.id]: { ...f[g.id], note: e.target.value } }))}
                     placeholder="Note (optional)"
-                    className="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-400 text-gray-600"
+                    className="w-full px-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-400 bg-white text-gray-900 text-gray-600"
                   />
                 </div>
               </Card>

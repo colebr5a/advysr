@@ -25,15 +25,15 @@ export function StepDebts({ value = [], onChange, onNext, onBack }) {
             <div className="grid grid-cols-3 gap-2">
               <div>
                 <label className="text-xs text-gray-500">Balance ($)</label>
-                <input type="number" min="0" value={debt.balance||''} onChange={e=>{const d=[...value];d[i]={...d[i],balance:Number(e.target.value)||0};onChange(d);}} className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500" placeholder="5000"/>
+                <input type="number" min="0" value={debt.balance||''} onChange={e=>{const d=[...value];d[i]={...d[i],balance:Number(e.target.value)||0};onChange(d);}} className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 bg-white text-gray-900" placeholder="5000"/>
               </div>
               <div>
                 <label className="text-xs text-gray-500">Rate (%)</label>
-                <input type="number" min="0" max="100" step="0.1" value={debt.interestRate?Math.round(debt.interestRate*1000)/10:''} onChange={e=>{const d=[...value];d[i]={...d[i],interestRate:(Number(e.target.value)||0)/100};onChange(d);}} className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500" placeholder="19"/>
+                <input type="number" min="0" max="100" step="0.1" value={debt.interestRate?Math.round(debt.interestRate*1000)/10:''} onChange={e=>{const d=[...value];d[i]={...d[i],interestRate:(Number(e.target.value)||0)/100};onChange(d);}} className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 bg-white text-gray-900" placeholder="19"/>
               </div>
               <div>
                 <label className="text-xs text-gray-500">Min Pmt ($)</label>
-                <input type="number" min="0" value={debt.minimumPayment||''} onChange={e=>{const d=[...value];d[i]={...d[i],minimumPayment:Number(e.target.value)||0};onChange(d);}} className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500" placeholder="150"/>
+                <input type="number" min="0" value={debt.minimumPayment||''} onChange={e=>{const d=[...value];d[i]={...d[i],minimumPayment:Number(e.target.value)||0};onChange(d);}} className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 bg-white text-gray-900" placeholder="150"/>
               </div>
             </div>
           </div>

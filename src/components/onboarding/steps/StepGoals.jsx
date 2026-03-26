@@ -35,15 +35,15 @@ export function StepGoals({ value = [], onChange, onNext, onBack }) {
             <div className="grid grid-cols-3 gap-2">
               <div>
                 <label className="text-xs text-gray-500">Target ($)</label>
-                <input type="number" min="0" value={goal.targetAmount||''} onChange={e=>{const d=[...value];d[i]={...d[i],targetAmount:Number(e.target.value)||0};onChange(d);}} className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"/>
+                <input type="number" min="0" value={goal.targetAmount||''} onChange={e=>{const d=[...value];d[i]={...d[i],targetAmount:Number(e.target.value)||0};onChange(d);}} className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 bg-white text-gray-900"/>
               </div>
               <div>
                 <label className="text-xs text-gray-500">Months</label>
-                <input type="number" min="1" value={goal.targetMonths||''} onChange={e=>{const d=[...value];d[i]={...d[i],targetMonths:Number(e.target.value)||1};onChange(d);}} className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"/>
+                <input type="number" min="1" value={goal.targetMonths||''} onChange={e=>{const d=[...value];d[i]={...d[i],targetMonths:Number(e.target.value)||1};onChange(d);}} className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 bg-white text-gray-900"/>
               </div>
               <div>
                 <label className="text-xs text-gray-500">Saved ($)</label>
-                <input type="number" min="0" value={goal.currentSaved||''} onChange={e=>{const d=[...value];d[i]={...d[i],currentSaved:Number(e.target.value)||0};onChange(d);}} className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"/>
+                <input type="number" min="0" value={goal.currentSaved||''} onChange={e=>{const d=[...value];d[i]={...d[i],currentSaved:Number(e.target.value)||0};onChange(d);}} className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 bg-white text-gray-900"/>
               </div>
             </div>
           </div>

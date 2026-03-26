@@ -271,14 +271,14 @@ export function HomePage({ profile, onProfileUpdate }) {
                             value={form.amount || ''}
                             onChange={e => setEntryForms(f => ({ ...f, [formKey]: { ...f[formKey], amount: e.target.value } }))}
                             placeholder={`e.g. ${Math.round(item.suggested / 2)}`}
-                            className="w-full pl-5 pr-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-400"
+                            className="w-full pl-5 pr-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-400 bg-white text-gray-900"
                           />
                         </div>
                         <input
                           value={form.note || ''}
                           onChange={e => setEntryForms(f => ({ ...f, [formKey]: { ...f[formKey], note: e.target.value } }))}
                           placeholder="Note"
-                          className="flex-1 px-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-400"
+                          className="flex-1 px-2 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-400 bg-white text-gray-900"
                         />
                         <button
                           onClick={() => addEntry(item.id)}

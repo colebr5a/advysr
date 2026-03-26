@@ -8,7 +8,7 @@ export function StepAge({ value, onChange, onNext, onBack }) {
         value={value || ''}
         onChange={e => onChange(Number(e.target.value))}
         placeholder="e.g. 32"
-        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-lg"
+        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-lg bg-white text-gray-900"
         autoFocus
       />
     </StepWrapper>
