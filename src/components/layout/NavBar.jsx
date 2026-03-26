@@ -7,7 +7,7 @@ export function NavBar({ activePage, onNavigate, onEditProfile, onReset, onLogou
   ];
 
   return (
-    <header className="bg-[#1e1e1e] border-b border-[#333] sticky top-0 z-20">
+    <header className="sticky top-0 z-20" style={{ background: '#222222', borderBottom: '1px solid #333' }}>
       <div className="max-w-5xl mx-auto px-4">
         <div className="flex items-center justify-between py-3">
           <div>
