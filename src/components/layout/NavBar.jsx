@@ -12,7 +12,7 @@ export function NavBar({ activePage, onNavigate, onEditProfile, onReset, onLogou
         <div className="flex items-center justify-between py-3">
           <div>
             <h1 className="text-xl font-bold text-white tracking-tight">Advysr</h1>
-            <p className="text-xs text-gray-500">Personal Finance Advisor</p>
+            <p className="text-xs text-gray-500">Personal Finance Manager</p>
           </div>
 
           <nav className="flex gap-1">
