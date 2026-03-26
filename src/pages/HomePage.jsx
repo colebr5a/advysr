@@ -146,7 +146,7 @@ export function HomePage({ profile, onProfileUpdate }) {
               <input
                 value={acc.label}
                 onChange={e => { const a = [...accounts]; a[i] = { ...a[i], label: e.target.value }; updateAccounts(a); }}
-                className="text-xs font-medium text-gray-500 w-full border-0 bg-transparent focus:outline-none focus:bg-gray-50 rounded px-0 mb-2 truncate"
+                className="text-xs font-medium text-gray-500 w-full border-0 bg-transparent focus:outline-none focus:bg-transparent rounded px-0 mb-2 truncate"
               />
               <div className="relative">
                 <span className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
@@ -155,7 +155,7 @@ export function HomePage({ profile, onProfileUpdate }) {
                   value={acc.balance || ''}
                   onChange={e => { const a = [...accounts]; a[i] = { ...a[i], balance: Number(e.target.value) || 0 }; updateAccounts(a); }}
                   placeholder="0"
-                  className="w-full pl-4 text-xl font-bold text-white border-0 bg-transparent focus:outline-none focus:bg-gray-50 rounded"
+                  className="w-full pl-4 text-xl font-bold text-white border-0 bg-transparent focus:outline-none focus:bg-transparent rounded"
                 />
               </div>
             </Card>

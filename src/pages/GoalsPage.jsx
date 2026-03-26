@@ -177,7 +177,7 @@ export function GoalsPage({ profile, onProfileUpdate }) {
                   <input
                     value={g.label}
                     onChange={e => updateGoal(g.id, 'label', e.target.value)}
-                    className="text-base font-semibold text-white text-center border-0 bg-transparent focus:outline-none focus:bg-gray-50 rounded px-1 w-full"
+                    className="text-base font-semibold text-white text-center border-0 bg-transparent focus:outline-none focus:bg-transparent rounded px-1 w-full"
                   />
                 </div>
 
