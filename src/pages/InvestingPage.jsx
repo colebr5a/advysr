@@ -140,7 +140,7 @@ export function InvestingPage({ profile }) {
     <main className="max-w-5xl mx-auto px-4 py-8 space-y-8">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Investing</h1>
+          <h1 className="text-2xl font-bold text-white">Investing</h1>
           <p className="text-gray-500 text-sm mt-1">Personalized allocation based on your profile</p>
         </div>
         <div className={`px-4 py-2 rounded-xl ${rd.bg}`}>
@@ -152,7 +152,7 @@ export function InvestingPage({ profile }) {
       {/* Account Analysis */}
       {accounts.length > 0 && (
         <div>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">Your Account Analysis</h2>
+          <h2 className="text-lg font-bold text-white mb-3">Your Account Analysis</h2>
           <div className="space-y-3">
             {accounts.map(acc => {
               const advice = getAccountAdvice(acc, monthlyExpenses, efBalance);
@@ -161,7 +161,7 @@ export function InvestingPage({ profile }) {
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <p className="font-semibold text-gray-900">{acc.label}</p>
+                        <p className="font-semibold text-white">{acc.label}</p>
                         <span className="text-xs px-2 py-0.5 bg-white/70 rounded-full text-gray-500 font-medium capitalize">{classifyAccount(acc.label).replace('_', ' ')}</span>
                       </div>
                       <p className="text-sm text-gray-600">{advice.message}</p>
@@ -170,7 +170,7 @@ export function InvestingPage({ profile }) {
                       )}
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <p className="text-xl font-bold text-gray-900">{fmt(acc.balance || 0)}</p>
+                      <p className="text-xl font-bold text-white">{fmt(acc.balance || 0)}</p>
                     </div>
                   </div>
                 </div>
@@ -183,17 +183,17 @@ export function InvestingPage({ profile }) {
             <Card className="mt-4">
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <p className="font-semibold text-gray-900">Investable Assets in Brokerage</p>
+                  <p className="font-semibold text-white">Investable Assets in Brokerage</p>
                   <p className="text-sm text-gray-500">Apply your {rd.label} allocation plan to these funds</p>
                 </div>
-                <p className="text-2xl font-bold text-gray-900">{fmt(totalInvestable)}</p>
+                <p className="text-2xl font-bold text-white">{fmt(totalInvestable)}</p>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {sectors.slice(0, 4).map((s, i) => (
                   <div key={i} className="rounded-xl p-3 text-center" style={{ background: '#383838' }}>
                     <div className="w-2 h-2 rounded-sm mx-auto mb-1" style={{ background: s.color }} />
                     <p className="text-xs text-gray-500 truncate">{s.sector.split('/')[0].trim()}</p>
-                    <p className="font-bold text-gray-900">{fmt(Math.round(totalInvestable * s.pct))}</p>
+                    <p className="font-bold text-white">{fmt(Math.round(totalInvestable * s.pct))}</p>
                     <p className="text-xs text-gray-400">{Math.round(s.pct * 100)}%</p>
                   </div>
                 ))}
@@ -205,17 +205,17 @@ export function InvestingPage({ profile }) {
 
       {/* Monthly investing plan */}
       <div>
-        <h2 className="text-lg font-bold text-gray-900 mb-3">Monthly Investing Plan</h2>
+        <h2 className="text-lg font-bold text-white mb-3">Monthly Investing Plan</h2>
         <Card className="mb-4">
           <div className="flex items-start gap-4">
             <div className="text-2xl">{risk === 'conservative' ? '🛡️' : risk === 'moderate' ? '⚖️' : '🚀'}</div>
             <div className="flex-1">
-              <p className="font-semibold text-gray-900">{rd.label} Portfolio</p>
+              <p className="font-semibold text-white">{rd.label} Portfolio</p>
               <p className="text-sm text-gray-500 mt-0.5">{rd.desc}</p>
             </div>
             <div className="text-right">
               <p className="text-sm text-gray-500">Monthly Budget</p>
-              <p className="text-2xl font-bold text-gray-900">{fmt(sectors.reduce((s, a) => s + a.monthlyAmount, 0))}</p>
+              <p className="text-2xl font-bold text-white">{fmt(sectors.reduce((s, a) => s + a.monthlyAmount, 0))}</p>
             </div>
           </div>
         </Card>
@@ -223,7 +223,7 @@ export function InvestingPage({ profile }) {
         {/* Type summary pills */}
         <div className="flex flex-wrap gap-3 mb-4">
           {Object.entries(totalByType).map(([type, amt]) => (
-            <div key={type} className={`px-4 py-2 rounded-xl ${TYPE_COLORS[type] || 'bg-gray-100 text-gray-700'}`}>
+            <div key={type} className={`px-4 py-2 rounded-xl ${TYPE_COLORS[type] || 'bg-gray-100 text-gray-300'}`}>
               <span className="text-xs font-medium capitalize">{type}</span>
               <span className="ml-2 font-bold">{fmt(amt)}/mo</span>
             </div>
@@ -238,19 +238,19 @@ export function InvestingPage({ profile }) {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-0.5">
                     <div className="w-3 h-3 rounded-sm flex-shrink-0" style={{ background: s.color }} />
-                    <p className="font-semibold text-gray-900 text-sm">{s.sector}</p>
+                    <p className="font-semibold text-white text-sm">{s.sector}</p>
                   </div>
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${TYPE_COLORS[s.type] || 'bg-gray-100 text-gray-600'}`}>{s.type}</span>
                 </div>
                 <div className="text-right ml-3 flex-shrink-0">
-                  <p className="text-xl font-bold text-gray-900">{fmt(s.monthlyAmount)}</p>
+                  <p className="text-xl font-bold text-white">{fmt(s.monthlyAmount)}</p>
                   <p className="text-xs text-gray-400">{Math.round(s.pct * 100)}% of budget</p>
                 </div>
               </div>
               <p className="text-xs text-gray-500 mb-2">{s.reason}</p>
               <div className="rounded-lg px-3 py-2" style={{ background: '#383838' }}>
                 <p className="text-xs text-gray-400 font-medium">Examples</p>
-                <p className="text-xs text-gray-700 font-mono mt-0.5">{s.examples}</p>
+                <p className="text-xs text-gray-300 font-mono mt-0.5">{s.examples}</p>
               </div>
             </Card>
           ))}

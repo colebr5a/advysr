@@ -26,7 +26,7 @@ export function StepGoals({ value = [], onChange, onNext, onBack }) {
               <select
                 value={goal.type}
                 onChange={e => { const d=[...value]; const t=GOAL_TYPES.find(g=>g.type===e.target.value); d[i]={...d[i],type:e.target.value,label:t?.label||e.target.value}; onChange(d); }}
-                className="text-sm font-medium border-0 bg-transparent focus:outline-none text-gray-700"
+                className="text-sm font-medium border-0 bg-transparent focus:outline-none text-gray-300"
               >
                 {GOAL_TYPES.map(t=><option key={t.type} value={t.type}>{t.label}</option>)}
               </select>

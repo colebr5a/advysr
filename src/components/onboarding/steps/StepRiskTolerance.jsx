@@ -16,7 +16,7 @@ export function StepRiskTolerance({ value, onChange, onNext, onBack }) {
             onClick={() => onChange(opt.value)}
             className={`w-full text-left p-4 rounded-xl border-2 transition-all ${value===opt.value ? 'border-primary-500 bg-primary-50' : 'border-gray-100 hover:border-gray-200'}`}
           >
-            <div className="flex items-center gap-2 font-semibold text-gray-800 mb-1">
+            <div className="flex items-center gap-2 font-semibold text-gray-100 mb-1">
               <span>{opt.emoji}</span> {opt.label}
             </div>
             <p className="text-sm text-gray-500">{opt.desc}</p>
