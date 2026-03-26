@@ -161,7 +161,7 @@ export function InvestingPage({ profile }) {
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <p className="font-semibold text-white">{acc.label}</p>
+                        <p className="font-semibold text-gray-400">{acc.label}</p>
                         <span className="text-xs px-2 py-0.5 bg-white/70 rounded-full text-gray-500 font-medium capitalize">{classifyAccount(acc.label).replace('_', ' ')}</span>
                       </div>
                       <p className="text-sm text-gray-600">{advice.message}</p>
