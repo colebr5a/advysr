@@ -10,7 +10,7 @@ export function CurrencyInput({ value, onChange, placeholder = '0', label }) {
           value={value === 0 ? '' : value}
           onChange={e => onChange(Number(e.target.value) || 0)}
           placeholder={placeholder}
-          className="w-full pl-8 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-lg"
+          className="w-full pl-8 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-lg bg-white text-gray-900"
         />
       </div>
     </div>
