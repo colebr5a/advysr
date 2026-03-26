@@ -16,7 +16,7 @@ export function StepDebts({ value = [], onChange, onNext, onBack }) {
               <select
                 value={debt.type}
                 onChange={e => { const d=[...value]; d[i]={...d[i], type:e.target.value, label:DEBT_LABELS[e.target.value]}; onChange(d); }}
-                className="text-sm font-medium border-0 bg-transparent focus:outline-none text-gray-300"
+                className="text-sm font-medium border-0 bg-transparent focus:outline-none text-gray-700"
               >
                 {DEBT_TYPES.map(t => <option key={t} value={t}>{DEBT_LABELS[t]}</option>)}
               </select>

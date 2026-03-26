@@ -130,7 +130,7 @@ export function HomePage({ profile, onProfileUpdate }) {
       {/* Account Buckets */}
       <div>
         <div className="flex justify-between items-center mb-3">
-          <h2 className="text-lg font-bold text-white">Accounts</h2>
+          <h2 className="text-lg font-bold text-gray-900">Accounts</h2>
           <button
             onClick={() => updateAccounts([...accounts, { id: `acc${++accId}`, label: 'New Account', balance: 0 }])}
             className="text-sm text-primary-600 hover:underline font-medium"
@@ -155,7 +155,7 @@ export function HomePage({ profile, onProfileUpdate }) {
                   value={acc.balance || ''}
                   onChange={e => { const a = [...accounts]; a[i] = { ...a[i], balance: Number(e.target.value) || 0 }; updateAccounts(a); }}
                   placeholder="0"
-                  className="w-full pl-4 text-xl font-bold text-white border-0 bg-transparent focus:outline-none focus:bg-gray-50 rounded"
+                  className="w-full pl-4 text-xl font-bold text-gray-900 border-0 bg-transparent focus:outline-none focus:bg-gray-50 rounded"
                 />
               </div>
             </Card>
@@ -175,7 +175,7 @@ export function HomePage({ profile, onProfileUpdate }) {
                   ? 'bg-primary-600 text-white'
                   : idx === currentMonthIndex
                   ? 'border-2 border-primary-300 text-primary-600'
-                  : 'text-gray-400 hover:text-gray-300 hover:bg-gray-100'
+                  : 'text-gray-400 hover:text-gray-700 hover:bg-gray-100'
               }`}
             >
               {m.slice(0, 3)}
@@ -183,7 +183,7 @@ export function HomePage({ profile, onProfileUpdate }) {
           ))}
         </div>
 
-        <h2 className="text-lg font-bold text-white mb-4">
+        <h2 className="text-lg font-bold text-gray-900 mb-4">
           {MONTHS[activeMonth]} — Monthly Surplus Allocation
           {activeMonth === currentMonthIndex && (
             <span className="ml-2 text-xs bg-primary-100 text-primary-600 px-2 py-0.5 rounded-full font-medium">Current Month</span>
@@ -227,7 +227,7 @@ export function HomePage({ profile, onProfileUpdate }) {
                       </button>
                       <div className="w-3 h-3 rounded-sm flex-shrink-0" style={{ background: item.color }} />
                       <div className="flex-1 min-w-0">
-                        <p className={`font-semibold text-sm ${isChecked ? 'text-green-800' : 'text-gray-100'}`}>{item.label}</p>
+                        <p className={`font-semibold text-sm ${isChecked ? 'text-green-800' : 'text-gray-800'}`}>{item.label}</p>
                         <div className="flex items-center gap-2 mt-0.5">
                           <div className="flex-1 bg-gray-200 rounded-full h-1.5">
                             <div
@@ -248,7 +248,7 @@ export function HomePage({ profile, onProfileUpdate }) {
                         {entries.map(e => (
                           <div key={e.id} className="flex items-center justify-between group/entry pl-9">
                             <div className="flex items-center gap-2 text-xs text-gray-500">
-                              <span className="font-semibold text-gray-300">{fmt(e.amount)}</span>
+                              <span className="font-semibold text-gray-700">{fmt(e.amount)}</span>
                               {e.note && <span className="text-gray-400">— {e.note}</span>}
                               <span className="text-gray-300">{e.date}</span>
                             </div>
@@ -298,7 +298,7 @@ export function HomePage({ profile, onProfileUpdate }) {
                 <p className="text-sm font-medium text-gray-500 mb-4">Monthly Progress</p>
                 <CircularProgress value={allocationProgress} size={120} strokeWidth={10} color="#2563eb">
                   <div className="text-center">
-                    <p className="text-xl font-bold text-white">{Math.round(allocationProgress * 100)}%</p>
+                    <p className="text-xl font-bold text-gray-900">{Math.round(allocationProgress * 100)}%</p>
                     <p className="text-xs text-gray-400">logged</p>
                   </div>
                 </CircularProgress>

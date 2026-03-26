@@ -90,7 +90,7 @@ export function GoalsPage({ profile, onProfileUpdate }) {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Goals</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Goals</h1>
           <p className="text-gray-500 text-sm mt-1">Track your financial milestones</p>
         </div>
         <button
@@ -106,15 +106,15 @@ export function GoalsPage({ profile, onProfileUpdate }) {
         <Card className="flex items-center gap-6">
           <CircularProgress value={overallPct} size={80} strokeWidth={8} color="#2563eb">
             <div className="text-center">
-              <p className="text-sm font-bold text-white">{Math.round(overallPct * 100)}%</p>
+              <p className="text-sm font-bold text-gray-900">{Math.round(overallPct * 100)}%</p>
             </div>
           </CircularProgress>
           <div className="flex-1 space-y-1">
-            <p className="text-sm font-medium text-gray-300">Overall Progress</p>
+            <p className="text-sm font-medium text-gray-700">Overall Progress</p>
             <div className="flex gap-6 text-sm flex-wrap">
-              <span className="text-gray-500">Saved: <span className="font-semibold text-white">{fmt(totalSaved)}</span></span>
-              <span className="text-gray-500">Target: <span className="font-semibold text-white">{fmt(totalTargeted)}</span></span>
-              <span className="text-gray-500">Remaining: <span className="font-semibold text-white">{fmt(Math.max(0, totalTargeted - totalSaved))}</span></span>
+              <span className="text-gray-500">Saved: <span className="font-semibold text-gray-900">{fmt(totalSaved)}</span></span>
+              <span className="text-gray-500">Target: <span className="font-semibold text-gray-900">{fmt(totalTargeted)}</span></span>
+              <span className="text-gray-500">Remaining: <span className="font-semibold text-gray-900">{fmt(Math.max(0, totalTargeted - totalSaved))}</span></span>
             </div>
           </div>
         </Card>
@@ -124,7 +124,7 @@ export function GoalsPage({ profile, onProfileUpdate }) {
       {showAdd && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
           <div className="rounded-2xl p-6 w-full max-w-sm shadow-2xl" style={{ background: '#2c2c2c', border: '1px solid #3a3a3a' }}>
-            <h3 className="text-lg font-bold text-white mb-4">New Goal</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">New Goal</h3>
             <div className="grid grid-cols-2 gap-2 mb-4">
               {GOAL_TYPES.map(t => (
                 <button
@@ -148,7 +148,7 @@ export function GoalsPage({ profile, onProfileUpdate }) {
       {goals.length === 0 ? (
         <Card className="text-center py-16">
           <p className="text-4xl mb-3">🎯</p>
-          <p className="font-semibold text-gray-300">No goals yet</p>
+          <p className="font-semibold text-gray-700">No goals yet</p>
           <p className="text-gray-400 text-sm mt-1">Add your first financial goal to get started</p>
         </Card>
       ) : (
@@ -177,7 +177,7 @@ export function GoalsPage({ profile, onProfileUpdate }) {
                   <input
                     value={g.label}
                     onChange={e => updateGoal(g.id, 'label', e.target.value)}
-                    className="text-base font-semibold text-white text-center border-0 bg-transparent focus:outline-none focus:bg-gray-50 rounded px-1 w-full"
+                    className="text-base font-semibold text-gray-900 text-center border-0 bg-transparent focus:outline-none focus:bg-gray-50 rounded px-1 w-full"
                   />
                 </div>
 
@@ -185,7 +185,7 @@ export function GoalsPage({ profile, onProfileUpdate }) {
                 <div className="flex justify-center mb-4">
                   <CircularProgress value={pct} size={100} strokeWidth={9} color={color}>
                     <div className="text-center">
-                      <p className="text-lg font-bold text-white">{Math.round(pct * 100)}%</p>
+                      <p className="text-lg font-bold text-gray-900">{Math.round(pct * 100)}%</p>
                       <p className="text-xs text-gray-400">saved</p>
                     </div>
                   </CircularProgress>
@@ -195,7 +195,7 @@ export function GoalsPage({ profile, onProfileUpdate }) {
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Saved</span>
-                    <span className="font-semibold text-white">{fmt(saved)}</span>
+                    <span className="font-semibold text-gray-900">{fmt(saved)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Target</span>
@@ -234,7 +234,7 @@ export function GoalsPage({ profile, onProfileUpdate }) {
                     {[...(g.contributions || [])].reverse().map(c => (
                       <div key={c.id} className="flex items-center justify-between group/entry">
                         <div className="flex-1 min-w-0">
-                          <span className="text-sm font-semibold text-gray-100">{fmt(c.amount)}</span>
+                          <span className="text-sm font-semibold text-gray-800">{fmt(c.amount)}</span>
                           {c.note && <span className="text-xs text-gray-400 ml-1">— {c.note}</span>}
                           <span className="text-xs text-gray-300 ml-1">{c.date}</span>
                         </div>
