@@ -123,7 +123,7 @@ export function GoalsPage({ profile, onProfileUpdate }) {
       {/* Add Goal Modal */}
       {showAdd && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+          <div className="rounded-2xl p-6 w-full max-w-sm shadow-2xl" style={{ background: '#2c2c2c', border: '1px solid #3a3a3a' }}>
             <h3 className="text-lg font-bold text-gray-900 mb-4">New Goal</h3>
             <div className="grid grid-cols-2 gap-2 mb-4">
               {GOAL_TYPES.map(t => (

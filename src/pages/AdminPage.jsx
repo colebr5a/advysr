@@ -97,7 +97,7 @@ function UserDetail({ row, onBack }) {
               const saved = (g.contributions || []).reduce((s, c) => s + c.amount, 0)
               const pct = g.targetAmount > 0 ? Math.min(100, Math.round(saved / g.targetAmount * 100)) : 0
               return (
-                <div key={g.id} className="flex items-center gap-4 p-3 bg-gray-50 rounded-xl">
+                <div key={g.id} className="flex items-center gap-4 p-3 rounded-xl" style={{ background: '#383838' }}>
                   <span className="text-lg">{g.icon || '🎯'}</span>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-gray-800 text-sm truncate">{g.label}</p>
@@ -190,14 +190,15 @@ export function AdminPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search by email..."
-            className="flex-1 max-w-sm px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-400 text-sm"
+            className="flex-1 max-w-sm px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-400 text-sm text-white"
+            style={{ background: '#2c2c2c', border: '1px solid #3a3a3a' }}
           />
           <span className="text-sm text-gray-400">{filtered.length} users</span>
         </div>
 
         <Card className="!p-0 overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-100">
+            <thead style={{ background: '#383838', borderBottom: '1px solid #3a3a3a' }}>
               <tr>
                 <th className="text-left px-6 py-3 font-medium text-gray-500">Email</th>
                 <th className="text-left px-6 py-3 font-medium text-gray-500">Joined</th>
@@ -213,7 +214,7 @@ export function AdminPage() {
                 </tr>
               )}
               {filtered.map(row => (
-                <tr key={row.id} className="hover:bg-gray-50 transition-colors">
+                <tr key={row.id} className="transition-colors" style={{ borderTop: '1px solid #3a3a3a' }} onMouseEnter={e => e.currentTarget.style.background='#383838'} onMouseLeave={e => e.currentTarget.style.background=''}>
                   <td className="px-6 py-4 font-medium text-gray-900">{row.email}</td>
                   <td className="px-6 py-4 text-gray-500">{fmtDate(row.created_at)}</td>
                   <td className="px-6 py-4 text-gray-500">{fmtRelative(row.last_seen)}</td>

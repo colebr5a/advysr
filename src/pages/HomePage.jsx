@@ -211,7 +211,7 @@ export function HomePage({ profile, onProfileUpdate }) {
                 return (
                   <div
                     key={item.id}
-                    className={`rounded-2xl border-2 transition-all overflow-hidden ${isChecked ? 'border-green-200 bg-green-50' : 'border-gray-100 bg-white'}`}
+                    className={`rounded-2xl border-2 transition-all overflow-hidden ${isChecked ? 'border-green-700 bg-green-950' : 'border-[#3a3a3a]'}`} style={isChecked ? {} : { background: '#2c2c2c' }}
                   >
                     {/* Main row */}
                     <div className="flex items-center gap-3 px-4 pt-4 pb-3">

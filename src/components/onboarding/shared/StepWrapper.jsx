@@ -3,24 +3,24 @@ export function StepWrapper({ title, subtitle, children, onNext, onBack, nextLab
     if (e.key === 'Enter' && canNext) onNext();
   }
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-primary-50 to-white px-4" onKeyDown={handleKey}>
+    <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: '#1a1a1a' }} onKeyDown={handleKey}>
       <div className="w-full max-w-lg">
         <div className="mb-6">
           <div className="flex justify-between text-sm text-gray-400 mb-2">
             <span>Step {step} of {total}</span>
             <span>{Math.round((step/total)*100)}%</span>
           </div>
-          <div className="w-full bg-gray-100 rounded-full h-1.5">
+          <div className="w-full rounded-full h-1.5" style={{ background: '#333' }}>
             <div className="bg-primary-500 h-1.5 rounded-full transition-all" style={{ width: `${(step/total)*100}%` }} />
           </div>
         </div>
-        <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">{title}</h2>
-          {subtitle && <p className="text-gray-500 mb-6">{subtitle}</p>}
+        <div className="rounded-3xl shadow-lg p-8" style={{ background: '#2c2c2c', border: '1px solid #3a3a3a' }}>
+          <h2 className="text-2xl font-bold text-white mb-1">{title}</h2>
+          {subtitle && <p className="text-gray-400 mb-6">{subtitle}</p>}
           <div className="space-y-4">{children}</div>
           <div className="flex gap-3 mt-8">
             {onBack && (
-              <button onClick={onBack} className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 font-medium transition-colors">
+              <button onClick={onBack} className="flex-1 py-3 rounded-xl font-medium transition-colors text-gray-400 hover:text-white" style={{ border: '1px solid #444', background: 'transparent' }}>
                 Back
               </button>
             )}

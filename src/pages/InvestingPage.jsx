@@ -190,7 +190,7 @@ export function InvestingPage({ profile }) {
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {sectors.slice(0, 4).map((s, i) => (
-                  <div key={i} className="bg-gray-50 rounded-xl p-3 text-center">
+                  <div key={i} className="rounded-xl p-3 text-center" style={{ background: '#383838' }}>
                     <div className="w-2 h-2 rounded-sm mx-auto mb-1" style={{ background: s.color }} />
                     <p className="text-xs text-gray-500 truncate">{s.sector.split('/')[0].trim()}</p>
                     <p className="font-bold text-gray-900">{fmt(Math.round(totalInvestable * s.pct))}</p>
@@ -248,7 +248,7 @@ export function InvestingPage({ profile }) {
                 </div>
               </div>
               <p className="text-xs text-gray-500 mb-2">{s.reason}</p>
-              <div className="bg-gray-50 rounded-lg px-3 py-2">
+              <div className="rounded-lg px-3 py-2" style={{ background: '#383838' }}>
                 <p className="text-xs text-gray-400 font-medium">Examples</p>
                 <p className="text-xs text-gray-700 font-mono mt-0.5">{s.examples}</p>
               </div>
