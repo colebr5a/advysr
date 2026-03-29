@@ -51,6 +51,7 @@ export default function App() {
     setProfile(p);
     setIsOnboarded(true);
     setEditing(false);
+    setPinUnlocked(true); // just set it, no need to re-enter immediately
   }
 
   async function handleProfileUpdate(updated) {
@@ -76,6 +77,7 @@ export default function App() {
     await signOut();
     setActivePage('home');
     setEditing(false);
+    setPinUnlocked(false);
   }
 
   // Resolving initial auth session
