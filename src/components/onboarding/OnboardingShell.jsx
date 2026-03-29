@@ -8,6 +8,7 @@ import { StepDebts } from './steps/StepDebts.jsx';
 import { StepEmergencyFund } from './steps/StepEmergencyFund.jsx';
 import { StepRiskTolerance } from './steps/StepRiskTolerance.jsx';
 import { StepGoals } from './steps/StepGoals.jsx';
+import { StepPin } from './steps/StepPin.jsx';
 
 const DEFAULT_DRAFT = {
   age: 0,
@@ -19,6 +20,7 @@ const DEFAULT_DRAFT = {
   emergencyFundBalance: 0,
   riskTolerance: '',
   goals: [],
+  pin: '',
 };
 
 export function OnboardingShell({ onComplete, initialDraft }) {
@@ -38,7 +40,8 @@ export function OnboardingShell({ onComplete, initialDraft }) {
     <StepDebts value={draft.debts} onChange={update('debts')} onNext={() => setStep(6)} onBack={() => setStep(4)} />,
     <StepEmergencyFund value={draft.emergencyFundBalance} onChange={update('emergencyFundBalance')} onNext={() => setStep(7)} onBack={() => setStep(5)} profile={draft} />,
     <StepRiskTolerance value={draft.riskTolerance} onChange={update('riskTolerance')} onNext={() => setStep(8)} onBack={() => setStep(6)} />,
-    <StepGoals value={draft.goals} onChange={update('goals')} onNext={() => onComplete(draft)} onBack={() => setStep(7)} />,
+    <StepGoals value={draft.goals} onChange={update('goals')} onNext={() => setStep(9)} onBack={() => setStep(7)} />,
+    <StepPin value={draft.pin} onChange={update('pin')} onNext={() => onComplete(draft)} onBack={() => setStep(8)} />,
   ];
 
   return steps[step];

@@ -3,6 +3,7 @@ import { useAuth } from './context/AuthContext.jsx';
 import { fetchProfile, saveProfile } from './lib/profileService.js';
 import { AuthPage } from './pages/AuthPage.jsx';
 import { OnboardingShell } from './components/onboarding/OnboardingShell.jsx';
+import { PinLock } from './components/PinLock.jsx';
 import { NavBar } from './components/layout/NavBar.jsx';
 import { HomePage } from './pages/HomePage.jsx';
 import { GoalsPage } from './pages/GoalsPage.jsx';
@@ -25,6 +26,7 @@ export default function App() {
   const [isOnboarded, setIsOnboarded]   = useState(false);
   const [editing, setEditing]           = useState(false);
   const [activePage, setActivePage]     = useState('home');
+  const [pinUnlocked, setPinUnlocked]   = useState(false);
 
   // Load profile from Supabase when user changes
   useEffect(() => {
@@ -84,6 +86,19 @@ export default function App() {
 
   // Logged in, loading profile from Supabase
   if (profileLoading) return <FullScreenSpinner />;
+
+  // PIN lock — shown after profile loads if PIN is set and not yet unlocked this session
+  if (isOnboarded && !editing && profile?.pin && !pinUnlocked) {
+    return (
+      <PinLock
+        onUnlock={(entered, onWrong) => {
+          if (entered === profile.pin) setPinUnlocked(true);
+          else onWrong();
+        }}
+        onSignOut={handleLogout}
+      />
+    );
+  }
 
   // Needs onboarding
   if (!isOnboarded || editing) {
