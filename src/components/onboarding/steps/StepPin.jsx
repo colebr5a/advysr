@@ -15,7 +15,7 @@ export function StepPin({ value, onChange, onNext, onBack }) {
   return (
     <StepWrapper
       title="Set a PIN"
-      subtitle="You'll enter this every time you open Advysr to protect your financial data."
+      subtitle="You'll enter this every time you open advysr to protect your financial data."
       onNext={handleNext}
       onBack={onBack}
       canNext={value.length === 4 && confirm.length === 4}

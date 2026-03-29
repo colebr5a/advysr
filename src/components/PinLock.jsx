@@ -24,7 +24,7 @@ export function PinLock({ onUnlock, onSignOut }) {
     <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: '#1a1a1a' }}>
       <div className="w-full max-w-xs">
         <div className="text-center mb-10">
-          <h1 className="text-2xl font-bold text-white tracking-tight mb-1">Advysr</h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight mb-1">advysr</h1>
           <p className="text-gray-500 text-sm">Enter your PIN to continue</p>
         </div>
 
