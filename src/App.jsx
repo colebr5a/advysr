@@ -47,11 +47,15 @@ export default function App() {
 
   async function handleComplete(draft) {
     const p = { ...draft, createdAt: profile?.createdAt || new Date().toISOString() };
-    await saveProfile(user.id, user.email, p);
+    try {
+      await saveProfile(user.id, user.email, p);
+    } catch (err) {
+      console.error('saveProfile failed:', err);
+    }
     setProfile(p);
     setIsOnboarded(true);
     setEditing(false);
-    setPinUnlocked(true); // just set it, no need to re-enter immediately
+    setPinUnlocked(true);
   }
 
   async function handleProfileUpdate(updated) {
