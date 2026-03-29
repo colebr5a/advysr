@@ -25,7 +25,7 @@ const DEFAULT_DRAFT = {
 
 export function OnboardingShell({ onComplete, initialDraft }) {
   const [step, setStep] = useState(0);
-  const [draft, setDraft] = useState(initialDraft || DEFAULT_DRAFT);
+  const [draft, setDraft] = useState({ ...DEFAULT_DRAFT, ...(initialDraft || {}) });
 
   function update(key) {
     return (val) => setDraft(d => ({ ...d, [key]: val }));
