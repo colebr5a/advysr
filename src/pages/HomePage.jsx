@@ -19,6 +19,22 @@ let entryCtr = 5000;
 
 const ACCOUNT_COLORS = ['#16a34a','#22c55e','#4ade80','#86efac','#a3e635','#facc15','#fb923c','#f87171'];
 
+function classifyAccount(label) {
+  const l = label.toLowerCase();
+  if (l.includes('hsa')) return 'hsa';
+  if (l.includes('check')) return 'checking';
+  if (l.includes('hysa') || l.includes('high-yield') || l.includes('high yield') || l.includes('savings') || l.includes('emergency')) return 'savings';
+  if (l.includes('roth') || l.includes('ira') || l.includes('401') || l.includes('403') || l.includes('retirement')) return 'retirement';
+  if (l.includes('brokerage') || l.includes('invest') || l.includes('taxable')) return 'brokerage';
+  return 'other';
+}
+
+const ALLOCATION_TARGETS = {
+  conservative: { checking: 10, savings: 30, retirement: 40, brokerage: 15, hsa: 5 },
+  moderate:     { checking: 8,  savings: 20, retirement: 40, brokerage: 27, hsa: 5 },
+  aggressive:   { checking: 5,  savings: 10, retirement: 35, brokerage: 45, hsa: 5 },
+};
+
 function NetWorthPieChart({ accounts, totalAssets }) {
   const size = 220;
   const cx = size / 2;
@@ -211,7 +227,14 @@ export function HomePage({ profile, onProfileUpdate }) {
           >+ Add Account</button>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {accounts.map((acc, i) => (
+          {accounts.map((acc, i) => {
+            const risk = profile.riskTolerance?.toLowerCase();
+            const targets = ALLOCATION_TARGETS[risk];
+            const accType = classifyAccount(acc.label);
+            const goalPct = targets?.[accType];
+            const currentPct = totalAssets > 0 ? Math.round((acc.balance || 0) / totalAssets * 100) : 0;
+            const onTarget = goalPct != null && currentPct >= goalPct;
+            return (
             <Card key={acc.id} className="!p-4 relative group">
               <button
                 onClick={() => updateAccounts(accounts.filter((_, j) => j !== i))}
@@ -220,8 +243,13 @@ export function HomePage({ profile, onProfileUpdate }) {
               <input
                 value={acc.label}
                 onChange={e => { const a = [...accounts]; a[i] = { ...a[i], label: e.target.value }; updateAccounts(a); }}
-                className="text-xs font-medium text-gray-500 w-full border-0 bg-transparent focus:outline-none focus:bg-transparent rounded px-0 mb-2 truncate"
+                className="text-xs font-medium text-gray-500 w-full border-0 bg-transparent focus:outline-none focus:bg-transparent rounded px-0 mb-1 truncate"
               />
+              {goalPct != null && (
+                <p className="text-xs mb-2" style={{ color: onTarget ? '#4ade80' : '#f59e0b' }}>
+                  Goal: {goalPct}% {onTarget ? '✓' : `· You: ${currentPct}%`}
+                </p>
+              )}
               <div className="relative">
                 <span className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
                 <input
@@ -233,7 +261,8 @@ export function HomePage({ profile, onProfileUpdate }) {
                 />
               </div>
             </Card>
-          ))}
+            );
+          })}
         </div>
       </div>
 
