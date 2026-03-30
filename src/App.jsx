@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from './context/AuthContext.jsx';
 import { fetchProfile, saveProfile } from './lib/profileService.js';
 import { AuthPage } from './pages/AuthPage.jsx';
+import { LandingPage } from './pages/LandingPage.jsx';
 import { OnboardingShell } from './components/onboarding/OnboardingShell.jsx';
 import { PinLock } from './components/PinLock.jsx';
 import { NavBar } from './components/layout/NavBar.jsx';
@@ -27,6 +28,7 @@ export default function App() {
   const [editing, setEditing]           = useState(false);
   const [activePage, setActivePage]     = useState('home');
   const [pinUnlocked, setPinUnlocked]   = useState(false);
+  const [showAuth, setShowAuth]         = useState(false);
 
   // Load profile from Supabase when user changes
   useEffect(() => {
@@ -88,7 +90,10 @@ export default function App() {
   if (authLoading) return <FullScreenSpinner />;
 
   // Not logged in
-  if (!user) return <AuthPage />;
+  if (!user) {
+    if (showAuth) return <AuthPage />;
+    return <LandingPage onGetStarted={() => setShowAuth(true)} onSignIn={() => setShowAuth(true)} />;
+  }
 
   // Logged in, loading profile from Supabase
   if (profileLoading) return <FullScreenSpinner />;
