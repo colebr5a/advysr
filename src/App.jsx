@@ -12,6 +12,7 @@ import { InvestingPage } from './pages/InvestingPage.jsx';
 import { AdminPage } from './pages/AdminPage.jsx';
 import { ResearchPage } from './pages/ResearchPage.jsx';
 import { PortfolioPage } from './pages/PortfolioPage.jsx';
+import { NewsPage } from './pages/NewsPage.jsx';
 
 function FullScreenSpinner() {
   return (
@@ -137,6 +138,7 @@ export default function App() {
       {activePage === 'goals'     && <GoalsPage profile={profile} onProfileUpdate={handleProfileUpdate} />}
       {activePage === 'portfolio' && <PortfolioPage profile={profile} onProfileUpdate={handleProfileUpdate} />}
       {activePage === 'investing' && <InvestingPage profile={profile} />}
+      {activePage === 'news'      && <NewsPage />}
       {activePage === 'research'   && <ResearchPage profile={profile} />}
       {activePage === 'admin'     && isAdmin && <AdminPage />}
     </div>

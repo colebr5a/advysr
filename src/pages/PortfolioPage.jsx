@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Card } from '../components/ui/Card.jsx';
 import { CsvImportModal } from '../components/portfolio/CsvImportModal.jsx';
 import { ASSET_CLASSES, TARGET_ALLOCATIONS, getAssetClass } from '../utils/tickerClassifier.js';
@@ -347,6 +347,77 @@ function EmptyState({ onImport }) {
 
 // ─── Main page ────────────────────────────────────────────────────────────
 
+function useSP500YTD(enabled) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!enabled) return;
+    setLoading(true);
+    fetch('/api/sp500')
+      .then(r => r.json())
+      .then(d => { if (!d.error) setData(d); })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [enabled]);
+
+  return { data, loading };
+}
+
+function BenchmarkCard({ portfolioReturn, sp500YTD, loading }) {
+  const diff = portfolioReturn - sp500YTD;
+  const outperforming = diff >= 0;
+
+  return (
+    <div
+      className="col-span-2 sm:col-span-4 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center gap-4"
+      style={{ background: '#2c2c2c', border: '1px solid #3a3a3a' }}
+    >
+      <div className="flex-1 min-w-0">
+        <p className="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wide">Benchmark Comparison · S&P 500 YTD</p>
+        <div className="flex items-center gap-6 flex-wrap">
+          {/* Portfolio return */}
+          <div>
+            <p className="text-xs text-gray-500 mb-0.5">Your Return</p>
+            <p className={`text-xl font-bold ${portfolioReturn >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+              {portfolioReturn >= 0 ? '+' : ''}{(portfolioReturn * 100).toFixed(2)}%
+            </p>
+          </div>
+          <div className="text-gray-600 text-xl font-light">vs</div>
+          {/* S&P 500 */}
+          <div>
+            <p className="text-xs text-gray-500 mb-0.5">S&P 500 YTD</p>
+            {loading ? (
+              <div className="h-7 w-16 rounded-lg animate-pulse" style={{ background: '#383838' }} />
+            ) : (
+              <p className={`text-xl font-bold ${sp500YTD >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                {sp500YTD >= 0 ? '+' : ''}{(sp500YTD * 100).toFixed(2)}%
+              </p>
+            )}
+          </div>
+          {/* Delta */}
+          {!loading && (
+            <div
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-semibold"
+              style={{ background: outperforming ? '#16a34a22' : '#dc262622', border: `1px solid ${outperforming ? '#16a34a44' : '#dc262644'}` }}
+            >
+              <span className={outperforming ? 'text-green-400' : 'text-red-400'}>
+                {outperforming ? '▲' : '▼'} {Math.abs(diff * 100).toFixed(2)}%
+              </span>
+              <span className={`text-xs ${outperforming ? 'text-green-600' : 'text-red-600'}`}>
+                {outperforming ? 'ahead' : 'behind'}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+      <p className="text-xs text-gray-600 sm:text-right sm:max-w-[180px] flex-shrink-0">
+        Portfolio return is from cost basis. S&P 500 is YTD as of today.
+      </p>
+    </div>
+  );
+}
+
 export function PortfolioPage({ profile, onProfileUpdate }) {
   const [showImport, setShowImport] = useState(false);
   const holdings = profile.holdings || [];
@@ -360,6 +431,9 @@ export function PortfolioPage({ profile, onProfileUpdate }) {
   const totalGainLoss = totalCost != null ? totalValue - totalCost : null;
   const totalGainPct = totalCost ? totalGainLoss / totalCost : null;
   const isGain = totalGainLoss != null && totalGainLoss >= 0;
+
+  const hasBenchmarkData = holdings.length > 0 && totalGainPct != null;
+  const { data: sp500, loading: sp500Loading } = useSP500YTD(hasBenchmarkData);
 
   // Compute actual allocation by asset class
   const allocationByClass = useMemo(() => {
@@ -451,6 +525,13 @@ export function PortfolioPage({ profile, onProfileUpdate }) {
                     {isGain ? '+' : ''}{(totalGainPct * 100).toFixed(2)}%
                   </p>
                 </Card>
+                {(sp500Loading || sp500) && (
+                  <BenchmarkCard
+                    portfolioReturn={totalGainPct}
+                    sp500YTD={sp500?.ytdReturn ?? 0}
+                    loading={sp500Loading}
+                  />
+                )}
               </>
             ) : (
               <Card className="!p-4 col-span-2">
