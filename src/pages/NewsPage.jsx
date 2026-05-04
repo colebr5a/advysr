@@ -33,7 +33,7 @@ function MarketHeatmap() {
       hasSymbolTooltip: true,
       isMonoSize: false,
       width: '100%',
-      height: '100%',
+      height: 650,
     });
     container.appendChild(script);
 
@@ -52,7 +52,7 @@ function MarketHeatmap() {
       <div
         ref={containerRef}
         className="tradingview-widget-container w-full"
-        style={{ height: '700px', background: '#1a1a1a' }}
+        style={{ height: '650px', background: '#1a1a1a' }}
       />
     </div>
   );
@@ -178,7 +178,8 @@ export function NewsPage() {
   useEffect(() => { fetchNews(); }, [fetchNews]);
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-8 space-y-6">
+    <div className="py-8 space-y-6">
+    <main className="max-w-5xl mx-auto px-4 space-y-6">
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
@@ -198,8 +199,14 @@ export function NewsPage() {
         </button>
       </div>
 
-      {/* Heatmap */}
-      <MarketHeatmap />
+    </main>
+
+      {/* Heatmap — full width */}
+      <div className="px-4">
+        <MarketHeatmap />
+      </div>
+
+    <main className="max-w-5xl mx-auto px-4 space-y-6">
 
       {/* Search + category filter */}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -276,5 +283,6 @@ export function NewsPage() {
         </p>
       )}
     </main>
+    </div>
   );
 }
