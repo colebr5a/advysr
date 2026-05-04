@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 const TAB_ICONS = {
   home:      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>,
   goals:     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>,
@@ -9,6 +11,8 @@ const TAB_ICONS = {
 };
 
 export function NavBar({ activePage, onNavigate, onEditProfile, onReset, onLogout, isAdmin, userEmail }) {
+  const [open, setOpen] = useState(false);
+
   const tabs = [
     { id: 'home',      label: 'Home' },
     { id: 'goals',     label: 'Goals' },
@@ -19,70 +23,126 @@ export function NavBar({ activePage, onNavigate, onEditProfile, onReset, onLogou
     ...(isAdmin ? [{ id: 'admin', label: 'Admin' }] : []),
   ];
 
+  function navigate(id) {
+    onNavigate(id);
+    setOpen(false);
+  }
+
   return (
     <>
-      {/* Desktop top nav */}
-      <header className="hidden sm:block sticky top-0 z-20" style={{ background: '#222222', borderBottom: '1px solid #333' }}>
-        <div className="max-w-5xl mx-auto px-4">
-          <div className="flex items-center justify-between py-3">
-            <div>
-              <h1 className="text-xl font-bold text-white tracking-tight">advysr</h1>
-              <p className="text-xs text-gray-500">Personal Finance Manager</p>
-            </div>
-
-            <nav className="flex gap-1">
-              {tabs.map(t => (
-                <button
-                  key={t.id}
-                  onClick={() => onNavigate(t.id)}
-                  className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                    activePage === t.id
-                      ? t.id === 'admin' ? 'bg-purple-600 text-white' : 'bg-primary-600 text-white'
-                      : 'text-gray-400 hover:text-white hover:bg-[#2a2a2a]'
-                  }`}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </nav>
-
-            <div className="flex items-center gap-2">
-              {userEmail && <span className="text-xs text-gray-500 hidden lg:block max-w-[120px] truncate">{userEmail}</span>}
-              <button onClick={onEditProfile} className="text-xs px-3 py-1.5 rounded-lg border border-[#444] hover:bg-[#2a2a2a] font-medium transition-colors text-gray-400">Edit Profile</button>
-              <button onClick={onReset} className="text-xs px-3 py-1.5 rounded-lg border border-red-900 text-red-500 hover:bg-red-950 font-medium transition-colors">Reset</button>
-              <button onClick={onLogout} className="text-xs px-3 py-1.5 rounded-lg border border-[#444] hover:bg-[#2a2a2a] font-medium transition-colors text-gray-400">Sign out</button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Mobile top bar */}
-      <header className="sm:hidden sticky top-0 z-20 flex items-center justify-between px-4 py-3" style={{ background: '#222222', borderBottom: '1px solid #333' }}>
+      {/* Top bar */}
+      <header className="sticky top-0 z-20 flex items-center gap-3 px-4 py-3" style={{ background: '#222222', borderBottom: '1px solid #333' }}>
+        <button
+          onClick={() => setOpen(o => !o)}
+          className="flex flex-col justify-center gap-1.5 w-8 h-8 items-center rounded-lg hover:bg-white/10 transition-colors flex-shrink-0"
+          aria-label="Toggle menu"
+        >
+          <span className="block w-5 h-0.5 rounded-full bg-gray-300" />
+          <span className="block w-5 h-0.5 rounded-full bg-gray-300" />
+          <span className="block w-5 h-0.5 rounded-full bg-gray-300" />
+        </button>
         <div>
-          <h1 className="text-lg font-bold text-white tracking-tight">advysr</h1>
-          <p className="text-xs text-gray-500">Personal Finance Manager</p>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={onEditProfile} className="text-xs px-2.5 py-1.5 rounded-lg border border-[#444] text-gray-400">Edit</button>
-          <button onClick={onLogout} className="text-xs px-2.5 py-1.5 rounded-lg border border-[#444] text-gray-400">Sign out</button>
+          <h1 className="text-lg font-bold text-white tracking-tight leading-none">advysr</h1>
+          <p className="text-xs text-gray-500 leading-none mt-0.5">Personal Finance Manager</p>
         </div>
       </header>
 
-      {/* Mobile bottom tab bar */}
-      <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-20 flex" style={{ background: '#222222', borderTop: '1px solid #333' }}>
-        {tabs.map(t => (
+      {/* Backdrop */}
+      {open && (
+        <div
+          className="fixed inset-0 z-30 bg-black/50"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      {/* Drawer */}
+      <aside
+        className="fixed inset-y-0 left-0 z-40 w-64 flex flex-col transition-transform duration-250"
+        style={{
+          background: '#1e1e1e',
+          borderRight: '1px solid #333',
+          transform: open ? 'translateX(0)' : 'translateX(-100%)',
+        }}
+      >
+        {/* Drawer header */}
+        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid #2e2e2e' }}>
+          <div>
+            <p className="text-base font-bold text-white tracking-tight">advysr</p>
+            {userEmail && <p className="text-xs text-gray-500 truncate max-w-[160px] mt-0.5">{userEmail}</p>}
+          </div>
           <button
-            key={t.id}
-            onClick={() => onNavigate(t.id)}
-            className={`flex-1 flex flex-col items-center justify-center py-2 gap-0.5 transition-colors ${
-              activePage === t.id ? 'text-primary-400' : 'text-gray-500'
-            }`}
+            onClick={() => setOpen(false)}
+            className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-colors"
           >
-            {TAB_ICONS[t.id]}
-            <span className="text-xs font-medium">{t.label}</span>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
-        ))}
-      </nav>
+        </div>
+
+        {/* Nav tabs */}
+        <nav className="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
+          {tabs.map(t => {
+            const active = activePage === t.id;
+            const isAdminTab = t.id === 'admin';
+            return (
+              <button
+                key={t.id}
+                onClick={() => navigate(t.id)}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-left"
+                style={{
+                  background: active ? (isAdminTab ? '#7c3aed22' : '#2563eb22') : 'transparent',
+                  color: active ? (isAdminTab ? '#a78bfa' : '#60a5fa') : '#9ca3af',
+                }}
+                onMouseEnter={e => { if (!active) e.currentTarget.style.background = '#ffffff0d'; }}
+                onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}
+              >
+                <span style={{ color: active ? (isAdminTab ? '#a78bfa' : '#60a5fa') : '#6b7280' }}>
+                  {TAB_ICONS[t.id]}
+                </span>
+                {t.label}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Bottom actions */}
+        <div className="px-3 py-3 space-y-0.5" style={{ borderTop: '1px solid #2e2e2e' }}>
+          <button
+            onClick={() => { onEditProfile(); setOpen(false); }}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white transition-colors text-left"
+            onMouseEnter={e => e.currentTarget.style.background = '#ffffff0d'}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            Edit Profile
+          </button>
+          <button
+            onClick={() => { onLogout(); setOpen(false); }}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white transition-colors text-left"
+            onMouseEnter={e => e.currentTarget.style.background = '#ffffff0d'}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Sign out
+          </button>
+          <button
+            onClick={() => { onReset(); setOpen(false); }}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:text-red-400 transition-colors text-left"
+            onMouseEnter={e => e.currentTarget.style.background = '#7f1d1d22'}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            Reset Data
+          </button>
+        </div>
+      </aside>
     </>
   );
 }

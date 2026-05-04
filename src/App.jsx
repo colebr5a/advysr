@@ -124,7 +124,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen pb-16 sm:pb-0" style={{ background: '#1a1a1a' }}>
+    <div className="min-h-screen" style={{ background: '#1a1a1a' }}>
       <NavBar
         activePage={activePage}
         onNavigate={setActivePage}
