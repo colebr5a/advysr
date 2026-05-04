@@ -52,7 +52,7 @@ function MarketHeatmap() {
       <div
         ref={containerRef}
         className="tradingview-widget-container w-full"
-        style={{ height: '500px', background: '#1a1a1a' }}
+        style={{ height: '700px', background: '#1a1a1a' }}
       />
     </div>
   );
