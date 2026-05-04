@@ -1,4 +1,62 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+
+// ─── Market Heatmap ───────────────────────────────────────────────────────────
+
+function MarketHeatmap() {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    container.innerHTML = '';
+
+    const widgetDiv = document.createElement('div');
+    widgetDiv.className = 'tradingview-widget-container__widget';
+    widgetDiv.style.height = '100%';
+    widgetDiv.style.width = '100%';
+    container.appendChild(widgetDiv);
+
+    const script = document.createElement('script');
+    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js';
+    script.async = true;
+    script.textContent = JSON.stringify({
+      exchanges: [],
+      dataSource: 'SPX500',
+      grouping: 'sector',
+      blockSize: 'market_cap_basic',
+      blockColor: 'change',
+      locale: 'en',
+      colorTheme: 'dark',
+      hasTopBar: false,
+      isDataSetEnabled: false,
+      isZoomEnabled: true,
+      hasSymbolTooltip: true,
+      isMonoSize: false,
+      width: '100%',
+      height: '100%',
+    });
+    container.appendChild(script);
+
+    return () => { container.innerHTML = ''; };
+  }, []);
+
+  return (
+    <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #3a3a3a' }}>
+      <div className="px-4 pt-4 pb-3 flex items-center justify-between" style={{ background: '#2c2c2c', borderBottom: '1px solid #3a3a3a' }}>
+        <div>
+          <h2 className="text-base font-bold text-white">Market Heatmap</h2>
+          <p className="text-xs text-gray-500 mt-0.5">S&P 500 · Sized by market cap · Colored by daily change</p>
+        </div>
+        <span className="text-xs text-gray-600">Powered by TradingView</span>
+      </div>
+      <div
+        ref={containerRef}
+        className="tradingview-widget-container w-full"
+        style={{ height: '500px', background: '#1a1a1a' }}
+      />
+    </div>
+  );
+}
 
 const CATEGORIES = [
   { id: 'markets',   label: 'Markets' },
@@ -139,6 +197,9 @@ export function NewsPage() {
           Refresh
         </button>
       </div>
+
+      {/* Heatmap */}
+      <MarketHeatmap />
 
       {/* Search + category filter */}
       <div className="flex flex-col sm:flex-row gap-3">
