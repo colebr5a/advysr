@@ -33,7 +33,7 @@ function MarketHeatmap() {
       hasSymbolTooltip: true,
       isMonoSize: false,
       width: '100%',
-      height: 650,
+      height: 325,
     });
     container.appendChild(script);
 
@@ -52,7 +52,7 @@ function MarketHeatmap() {
       <div
         ref={containerRef}
         className="tradingview-widget-container w-full"
-        style={{ height: '650px', background: '#1a1a1a' }}
+        style={{ height: '325px', background: '#1a1a1a' }}
       />
     </div>
   );
