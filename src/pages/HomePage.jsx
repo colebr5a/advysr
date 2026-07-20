@@ -186,7 +186,7 @@ export function HomePage({ profile, onProfileUpdate }) {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8 space-y-8">
       {/* Net Worth Hero */}
-      <Card className="!border-0" style={{ background: '#0f172a' }}>
+      <Card>
         <div className="flex flex-col sm:flex-row items-center gap-6">
           {/* Pie chart */}
           <div className="flex-shrink-0">
@@ -194,11 +194,11 @@ export function HomePage({ profile, onProfileUpdate }) {
           </div>
           {/* Right side */}
           <div className="flex-1 w-full">
-            <p className="text-gray-400 text-sm font-medium mb-1">Total Net Worth</p>
-            <p className={`text-4xl font-bold mb-4 ${netWorth < 0 ? 'text-red-400' : 'text-white'}`}>{fmt(netWorth)}</p>
-            <div className="flex gap-6 mb-4 text-sm text-gray-400">
-              <span>Assets: <span className="text-white font-semibold">{fmt(totalAssets)}</span></span>
-              <span>Debt: <span className="text-white font-semibold">{fmt(totalDebt)}</span></span>
+            <p className="text-gray-500 text-sm font-medium mb-1">Total Net Worth</p>
+            <p className={`text-4xl font-bold mb-4 ${netWorth < 0 ? 'text-red-500' : 'text-gray-900'}`}>{fmt(netWorth)}</p>
+            <div className="flex gap-6 mb-4 text-sm text-gray-500">
+              <span>Assets: <span className="text-gray-900 font-semibold">{fmt(totalAssets)}</span></span>
+              <span>Debt: <span className="text-gray-900 font-semibold">{fmt(totalDebt)}</span></span>
             </div>
             {/* Legend */}
             <div className="grid grid-cols-2 gap-x-6 gap-y-2">
@@ -207,8 +207,8 @@ export function HomePage({ profile, onProfileUpdate }) {
                 return (
                   <div key={acc.id} className="flex items-center gap-2 text-sm">
                     <div className="w-2.5 h-2.5 rounded-sm flex-shrink-0" style={{ background: ACCOUNT_COLORS[i % ACCOUNT_COLORS.length] }} />
-                    <span className="text-gray-400 truncate">{acc.label}</span>
-                    <span className="text-white font-semibold ml-auto">{pct}%</span>
+                    <span className="text-gray-500 truncate">{acc.label}</span>
+                    <span className="text-gray-900 font-semibold ml-auto">{pct}%</span>
                   </div>
                 );
               })}
