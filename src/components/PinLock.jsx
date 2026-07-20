@@ -21,10 +21,10 @@ export function PinLock({ onUnlock, onSignOut }) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: '#1a1a1a' }}>
+    <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: '#f8fafc' }}>
       <div className="w-full max-w-xs">
         <div className="text-center mb-10">
-          <h1 className="text-2xl font-bold text-white tracking-tight mb-1">advysr</h1>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight mb-1">advysr</h1>
           <p className="text-gray-500 text-sm">Enter your PIN to continue</p>
         </div>
 
@@ -42,7 +42,7 @@ export function PinLock({ onUnlock, onSignOut }) {
           ))}
         </div>
 
-        {error && <p className="text-red-400 text-sm text-center mb-4">Incorrect PIN. Try again.</p>}
+        {error && <p className="text-red-500 text-sm text-center mb-4">Incorrect PIN. Try again.</p>}
 
         {/* Keypad */}
         <div className="grid grid-cols-3 gap-3 max-w-[260px] mx-auto">
@@ -51,9 +51,9 @@ export function PinLock({ onUnlock, onSignOut }) {
               key={i}
               onClick={() => k !== '' && press(String(k))}
               className={`h-16 rounded-2xl text-xl font-semibold transition-all active:scale-95 ${
-                k === '' ? 'invisible' : 'text-white'
+                k === '' ? 'invisible' : 'text-gray-900 hover:bg-gray-100'
               }`}
-              style={{ background: k === '' ? 'transparent' : '#2c2c2c', border: k === '' ? 'none' : '1px solid #3a3a3a' }}
+              style={{ background: k === '' ? 'transparent' : '#ffffff', border: k === '' ? 'none' : '1px solid #e2e8f0' }}
             >
               {k}
             </button>
@@ -62,7 +62,7 @@ export function PinLock({ onUnlock, onSignOut }) {
 
         <button
           onClick={onSignOut}
-          className="w-full mt-8 text-sm text-gray-500 hover:text-gray-300 transition-colors"
+          className="w-full mt-8 text-sm text-gray-400 hover:text-gray-700 transition-colors"
         >
           Sign out
         </button>
