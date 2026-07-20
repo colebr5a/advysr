@@ -52,7 +52,7 @@ function DonutChart({ slices, totalValue }) {
               key={arc.key}
               d={donutArcPath(cx, cy, outerR, innerR, arc.startAngle, arc.endAngle)}
               fill={arc.color}
-              stroke="#1a1a1a"
+              stroke="#f8fafc"
               strokeWidth="2"
               style={{ transition: 'opacity 0.15s', opacity: hovered && hovered !== arc.key ? 0.4 : 1, cursor: 'pointer' }}
               onMouseEnter={() => setHovered(arc.key)}
@@ -62,18 +62,18 @@ function DonutChart({ slices, totalValue }) {
           {/* Center text */}
           {active ? (
             <>
-              <text x={cx} y={cy - 10} textAnchor="middle" fontSize="11" fill="#9ca3af">{active.label}</text>
-              <text x={cx} y={cy + 8} textAnchor="middle" fontSize="14" fontWeight="bold" fill="white">
+              <text x={cx} y={cy - 10} textAnchor="middle" fontSize="11" fill="#6b7280">{active.label}</text>
+              <text x={cx} y={cy + 8} textAnchor="middle" fontSize="14" fontWeight="bold" fill="#0f172a">
                 {fmt(active.value)}
               </text>
-              <text x={cx} y={cy + 24} textAnchor="middle" fontSize="11" fill="#9ca3af">
+              <text x={cx} y={cy + 24} textAnchor="middle" fontSize="11" fill="#6b7280">
                 {((active.value / totalValue) * 100).toFixed(1)}%
               </text>
             </>
           ) : (
             <>
-              <text x={cx} y={cy - 8} textAnchor="middle" fontSize="10" fill="#9ca3af">Portfolio</text>
-              <text x={cx} y={cy + 10} textAnchor="middle" fontSize="15" fontWeight="bold" fill="white">
+              <text x={cx} y={cy - 8} textAnchor="middle" fontSize="10" fill="#6b7280">Portfolio</text>
+              <text x={cx} y={cy + 10} textAnchor="middle" fontSize="15" fontWeight="bold" fill="#0f172a">
                 {fmt(totalValue)}
               </text>
             </>
@@ -97,7 +97,7 @@ function DonutChart({ slices, totalValue }) {
             </div>
             <div className="flex items-center gap-2 flex-shrink-0 ml-2">
               <span className="text-xs text-gray-500">{((arc.value / totalValue) * 100).toFixed(1)}%</span>
-              <span className="text-xs font-medium text-white">{fmt(arc.value)}</span>
+              <span className="text-xs font-medium text-gray-900">{fmt(arc.value)}</span>
             </div>
           </div>
         ))}
@@ -128,7 +128,7 @@ function TargetBar({ label, color, actual, target }) {
         </div>
       </div>
       {/* Actual bar */}
-      <div className="relative h-2 rounded-full overflow-hidden" style={{ background: '#383838' }}>
+      <div className="relative h-2 rounded-full overflow-hidden" style={{ background: '#f1f5f9' }}>
         <div
           className="h-full rounded-full transition-all duration-500"
           style={{ width: barWidth(actual), background: color, opacity: 0.85 }}
@@ -167,7 +167,7 @@ const SORT_KEYS = {
 function SortHeader({ label, sortKey, active, dir, onSort }) {
   return (
     <th
-      className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide cursor-pointer hover:text-white transition-colors select-none"
+      className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide cursor-pointer hover:text-gray-900 transition-colors select-none"
       onClick={() => onSort(sortKey)}
     >
       <span className="flex items-center gap-1">
@@ -217,16 +217,16 @@ function HoldingsTable({ holdings, totalValue }) {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search by ticker or name…"
-          className="w-full pl-9 pr-4 py-2 text-sm text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
-          style={{ background: '#2c2c2c', border: '1px solid #3a3a3a' }}
+          className="w-full pl-9 pr-4 py-2 text-sm text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
+          style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}
         />
       </div>
 
-      <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #3a3a3a' }}>
+      <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #e2e8f0' }}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr style={{ background: '#383838', borderBottom: '1px solid #3a3a3a' }}>
+              <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
                 <SortHeader label="Ticker" sortKey="ticker" active={sortKey === 'ticker'} dir={sortDir} onSort={handleSort} />
                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide hidden sm:table-cell">Name</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wide hidden md:table-cell">Asset Class</th>
@@ -251,13 +251,13 @@ function HoldingsTable({ holdings, totalValue }) {
                   <tr
                     key={h.id}
                     style={{
-                      background: i % 2 === 0 ? '#2c2c2c' : '#2f2f2f',
-                      borderTop: '1px solid #353535',
+                      background: i % 2 === 0 ? '#ffffff' : '#f8fafc',
+                      borderTop: '1px solid #f1f5f9',
                     }}
                     className="hover:bg-white/5 transition-colors"
                   >
                     <td className="px-4 py-3">
-                      <span className="font-mono font-bold text-white">{h.ticker}</span>
+                      <span className="font-mono font-bold text-gray-900">{h.ticker}</span>
                     </td>
                     <td className="px-4 py-3 text-gray-400 max-w-[180px] truncate hidden sm:table-cell">
                       {h.name || '—'}
@@ -270,12 +270,12 @@ function HoldingsTable({ holdings, totalValue }) {
                         {ac.label}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-right font-semibold text-white">
+                    <td className="px-4 py-3 text-right font-semibold text-gray-900">
                       {h.currentValue != null ? fmt(h.currentValue) : '—'}
                     </td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <div className="w-12 h-1.5 rounded-full overflow-hidden hidden sm:block" style={{ background: '#383838' }}>
+                        <div className="w-12 h-1.5 rounded-full overflow-hidden hidden sm:block" style={{ background: '#f1f5f9' }}>
                           <div className="h-full rounded-full" style={{ width: `${Math.min(100, pct * 100 * 3)}%`, background: ac.color }} />
                         </div>
                         <span className="text-gray-400 text-xs">{(pct * 100).toFixed(1)}%</span>
@@ -323,12 +323,12 @@ function HoldingsTable({ holdings, totalValue }) {
 function EmptyState({ onImport }) {
   return (
     <div className="flex flex-col items-center justify-center py-20 text-center px-6">
-      <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5" style={{ background: '#2c2c2c', border: '1px solid #3a3a3a' }}>
+      <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5" style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>
         <svg className="w-8 h-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
         </svg>
       </div>
-      <h2 className="text-xl font-bold text-white mb-2">No holdings yet</h2>
+      <h2 className="text-xl font-bold text-gray-900 mb-2">No holdings yet</h2>
       <p className="text-gray-500 text-sm max-w-sm mb-6">
         Import a positions CSV from Fidelity, Schwab, Vanguard, or Robinhood to see your portfolio breakdown, allocation charts, and gain/loss analysis.
       </p>
@@ -371,7 +371,7 @@ function BenchmarkCard({ portfolioReturn, sp500YTD, loading }) {
   return (
     <div
       className="col-span-2 sm:col-span-4 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center gap-4"
-      style={{ background: '#2c2c2c', border: '1px solid #3a3a3a' }}
+      style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}
     >
       <div className="flex-1 min-w-0">
         <p className="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wide">Benchmark Comparison · S&P 500 YTD</p>
@@ -388,7 +388,7 @@ function BenchmarkCard({ portfolioReturn, sp500YTD, loading }) {
           <div>
             <p className="text-xs text-gray-500 mb-0.5">S&P 500 YTD</p>
             {loading ? (
-              <div className="h-7 w-16 rounded-lg animate-pulse" style={{ background: '#383838' }} />
+              <div className="h-7 w-16 rounded-lg animate-pulse" style={{ background: '#f1f5f9' }} />
             ) : (
               <p className={`text-xl font-bold ${sp500YTD >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                 {sp500YTD >= 0 ? '+' : ''}{(sp500YTD * 100).toFixed(2)}%
@@ -476,7 +476,7 @@ export function PortfolioPage({ profile, onProfileUpdate }) {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Investment Portfolio</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Investment Portfolio</h1>
           <p className="text-gray-500 text-sm mt-1">
             {holdings.length > 0
               ? `${holdings.length} positions${importedDate ? ` · Imported ${importedDate}` : ''}`
@@ -486,8 +486,8 @@ export function PortfolioPage({ profile, onProfileUpdate }) {
         {holdings.length > 0 && (
           <button
             onClick={() => setShowImport(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-white transition-colors flex-shrink-0"
-            style={{ border: '1px solid #3a3a3a', background: '#2c2c2c' }}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors flex-shrink-0"
+            style={{ border: '1px solid #e2e8f0', background: '#ffffff' }}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -505,11 +505,11 @@ export function PortfolioPage({ profile, onProfileUpdate }) {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Card className="!p-4">
               <p className="text-xs text-gray-500 mb-1">Total Value</p>
-              <p className="text-xl font-bold text-white">{fmt(totalValue)}</p>
+              <p className="text-xl font-bold text-gray-900">{fmt(totalValue)}</p>
             </Card>
             <Card className="!p-4">
               <p className="text-xs text-gray-500 mb-1">Positions</p>
-              <p className="text-xl font-bold text-white">{holdings.length}</p>
+              <p className="text-xl font-bold text-gray-900">{holdings.length}</p>
             </Card>
             {totalGainLoss != null ? (
               <>
@@ -545,7 +545,7 @@ export function PortfolioPage({ profile, onProfileUpdate }) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Donut chart */}
             <Card>
-              <h2 className="text-base font-bold text-white mb-5">Asset Allocation</h2>
+              <h2 className="text-base font-bold text-gray-900 mb-5">Asset Allocation</h2>
               <DonutChart slices={donutSlices} totalValue={totalValue} />
             </Card>
 
@@ -553,7 +553,7 @@ export function PortfolioPage({ profile, onProfileUpdate }) {
             <Card>
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h2 className="text-base font-bold text-white">Target vs. Actual</h2>
+                  <h2 className="text-base font-bold text-gray-900">Target vs. Actual</h2>
                   <p className="text-xs text-gray-500 mt-0.5 capitalize">{riskTolerance} risk profile</p>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-gray-500 flex-shrink-0">
@@ -577,7 +577,7 @@ export function PortfolioPage({ profile, onProfileUpdate }) {
                   );
                 })}
               </div>
-              <div className="mt-4 pt-4 flex gap-4 text-xs" style={{ borderTop: '1px solid #3a3a3a' }}>
+              <div className="mt-4 pt-4 flex gap-4 text-xs" style={{ borderTop: '1px solid #e2e8f0' }}>
                 <span className="flex items-center gap-1 text-amber-400">
                   <span className="font-bold">▲</span> Overweight
                 </span>
@@ -593,7 +593,7 @@ export function PortfolioPage({ profile, onProfileUpdate }) {
 
           {/* Holdings table */}
           <div>
-            <h2 className="text-base font-bold text-white mb-3">All Holdings</h2>
+            <h2 className="text-base font-bold text-gray-900 mb-3">All Holdings</h2>
             <HoldingsTable holdings={holdings} totalValue={totalValue} />
           </div>
 

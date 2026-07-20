@@ -59,21 +59,21 @@ export function ResearchPage({ profile }) {
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-2xl bg-primary-600 flex items-center justify-center text-white font-bold text-lg">A</div>
         <div>
-          <h1 className="text-2xl font-bold text-white">Investment Research</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Investment Research</h1>
           <p className="text-gray-500 text-sm">Powered by Claude — personalized to your profile</p>
         </div>
       </div>
 
       {/* Profile context pill */}
       <div className="flex flex-wrap gap-2">
-        <span className="text-xs px-3 py-1 rounded-full border border-[#3a3a3a] text-gray-400">
-          Risk: <span className="text-white capitalize">{profile.riskTolerance || 'not set'}</span>
+        <span className="text-xs px-3 py-1 rounded-full border border-gray-200 text-gray-600">
+          Risk: <span className="text-gray-900 capitalize">{profile.riskTolerance || 'not set'}</span>
         </span>
-        <span className="text-xs px-3 py-1 rounded-full border border-[#3a3a3a] text-gray-400">
-          Surplus: <span className="text-white">${surplus}/mo</span>
+        <span className="text-xs px-3 py-1 rounded-full border border-gray-200 text-gray-600">
+          Surplus: <span className="text-gray-900">${surplus}/mo</span>
         </span>
-        <span className="text-xs px-3 py-1 rounded-full border border-[#3a3a3a] text-gray-400">
-          Accounts: <span className="text-white">{(profile.accounts || []).length}</span>
+        <span className="text-xs px-3 py-1 rounded-full border border-gray-200 text-gray-600">
+          Accounts: <span className="text-gray-900">{(profile.accounts || []).length}</span>
         </span>
       </div>
 
@@ -89,7 +89,7 @@ export function ResearchPage({ profile }) {
                   <button
                     key={q}
                     onClick={() => ask(q)}
-                    className="text-xs px-3 py-1.5 rounded-full border border-[#3a3a3a] text-gray-400 hover:border-primary-600 hover:text-primary-400 transition-colors text-left"
+                    className="text-xs px-3 py-1.5 rounded-full border border-gray-200 text-gray-600 hover:border-primary-600 hover:text-primary-400 transition-colors text-left"
                   >
                     {q}
                   </button>
@@ -107,9 +107,9 @@ export function ResearchPage({ profile }) {
                 className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
                   m.role === 'user'
                     ? 'bg-primary-600 text-white rounded-tr-sm'
-                    : 'text-gray-200 rounded-tl-sm'
+                    : 'text-gray-700 rounded-tl-sm'
                 }`}
-                style={m.role === 'assistant' ? { background: '#383838' } : {}}
+                style={m.role === 'assistant' ? { background: '#f1f5f9' } : {}}
               >
                 {m.text}
               </div>
@@ -119,7 +119,7 @@ export function ResearchPage({ profile }) {
           {loading && (
             <div className="flex gap-3">
               <div className="w-7 h-7 rounded-lg bg-primary-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">A</div>
-              <div className="px-4 py-3 rounded-2xl rounded-tl-sm text-sm text-gray-400 flex items-center gap-1" style={{ background: '#383838' }}>
+              <div className="px-4 py-3 rounded-2xl rounded-tl-sm text-sm text-gray-400 flex items-center gap-1" style={{ background: '#f1f5f9' }}>
                 <span className="animate-pulse">●</span>
                 <span className="animate-pulse" style={{ animationDelay: '0.2s' }}>●</span>
                 <span className="animate-pulse" style={{ animationDelay: '0.4s' }}>●</span>
@@ -130,14 +130,14 @@ export function ResearchPage({ profile }) {
         </div>
 
         {/* Input */}
-        <div className="flex gap-2 border-t border-[#3a3a3a] pt-4">
+        <div className="flex gap-2 border-t border-gray-200 pt-4">
           <input
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && ask(input)}
             placeholder="Ask about a stock, ETF, strategy, or concept..."
-            className="flex-1 px-4 py-3 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-            style={{ background: '#2c2c2c', border: '1px solid #3a3a3a' }}
+            className="flex-1 px-4 py-3 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}
             disabled={loading}
             autoFocus
           />

@@ -82,7 +82,7 @@ function NetWorthPieChart({ accounts, totalAssets }) {
     <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
       <svg width={size} height={size}>
         {slices.map((s, i) => (
-          <path key={i} d={arcPath(s.startAngle, s.endAngle, r, inner)} fill={s.color} stroke="#1a1a1a" strokeWidth={2} />
+          <path key={i} d={arcPath(s.startAngle, s.endAngle, r, inner)} fill={s.color} stroke="#f8fafc" strokeWidth={2} />
         ))}
       </svg>
       <div className="absolute text-center pointer-events-none">
@@ -186,7 +186,7 @@ export function HomePage({ profile, onProfileUpdate }) {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8 space-y-8">
       {/* Net Worth Hero */}
-      <Card className="!border-0 text-white" style={{ background: '#242424' }}>
+      <Card className="!border-0" style={{ background: '#0f172a' }}>
         <div className="flex flex-col sm:flex-row items-center gap-6">
           {/* Pie chart */}
           <div className="flex-shrink-0">
@@ -220,7 +220,7 @@ export function HomePage({ profile, onProfileUpdate }) {
       {/* Account Buckets */}
       <div>
         <div className="flex justify-between items-center mb-3">
-          <h2 className="text-lg font-bold text-white">Accounts</h2>
+          <h2 className="text-lg font-bold text-gray-900">Accounts</h2>
           <button
             onClick={() => updateAccounts([...accounts, { id: `acc${++accId}`, label: 'New Account', balance: 0 }])}
             className="text-sm text-primary-600 hover:underline font-medium"
@@ -243,7 +243,7 @@ export function HomePage({ profile, onProfileUpdate }) {
               <input
                 value={acc.label}
                 onChange={e => { const a = [...accounts]; a[i] = { ...a[i], label: e.target.value }; updateAccounts(a); }}
-                className="text-xs font-medium text-gray-500 w-full border-0 bg-transparent focus:outline-none focus:bg-transparent rounded px-0 mb-1 truncate"
+                className="text-xs font-medium text-gray-600 w-full border-0 bg-transparent focus:outline-none focus:bg-transparent rounded px-0 mb-1 truncate"
               />
               {goalPct != null && (
                 <p className="text-xs mb-2" style={{ color: onTarget ? '#4ade80' : '#f59e0b' }}>
@@ -257,7 +257,7 @@ export function HomePage({ profile, onProfileUpdate }) {
                   value={acc.balance || ''}
                   onChange={e => { const a = [...accounts]; a[i] = { ...a[i], balance: Number(e.target.value) || 0 }; updateAccounts(a); }}
                   placeholder="0"
-                  className="w-full pl-4 text-xl font-bold text-white border-0 bg-transparent focus:outline-none focus:bg-transparent rounded"
+                  className="w-full pl-4 text-xl font-bold text-gray-900 border-0 bg-transparent focus:outline-none focus:bg-transparent rounded"
                 />
               </div>
             </Card>
@@ -286,7 +286,7 @@ export function HomePage({ profile, onProfileUpdate }) {
           ))}
         </div>
 
-        <h2 className="text-lg font-bold text-white mb-4">
+        <h2 className="text-lg font-bold text-gray-900 mb-4">
           {MONTHS[activeMonth]} — Monthly Surplus Allocation
           {activeMonth === currentMonthIndex && (
             <span className="ml-2 text-xs bg-primary-100 text-primary-600 px-2 py-0.5 rounded-full font-medium">Current Month</span>
@@ -314,7 +314,7 @@ export function HomePage({ profile, onProfileUpdate }) {
                 return (
                   <div
                     key={item.id}
-                    className={`rounded-2xl border-2 transition-all overflow-hidden ${isChecked ? 'border-green-700 bg-green-950' : 'border-[#3a3a3a]'}`} style={isChecked ? {} : { background: '#2c2c2c' }}
+                    className={`rounded-2xl border-2 transition-all overflow-hidden ${isChecked ? 'border-green-300 bg-green-50' : 'border-gray-200 bg-white'}`}
                   >
                     {/* Main row */}
                     <div className="flex items-center gap-3 px-4 pt-4 pb-3">
@@ -330,7 +330,7 @@ export function HomePage({ profile, onProfileUpdate }) {
                       </button>
                       <div className="w-3 h-3 rounded-sm flex-shrink-0" style={{ background: item.color }} />
                       <div className="flex-1 min-w-0">
-                        <p className={`font-semibold text-sm ${isChecked ? 'text-green-800' : 'text-gray-100'}`}>{item.label}</p>
+                        <p className={`font-semibold text-sm ${isChecked ? 'text-green-700' : 'text-gray-800'}`}>{item.label}</p>
                         <div className="flex items-center gap-2 mt-0.5">
                           <div className="flex-1 bg-gray-200 rounded-full h-1.5">
                             <div
@@ -338,7 +338,7 @@ export function HomePage({ profile, onProfileUpdate }) {
                               style={{ width: `${logPct * 100}%`, background: item.color }}
                             />
                           </div>
-                          <span className="text-xs text-gray-400 whitespace-nowrap">
+                          <span className="text-xs text-gray-500 whitespace-nowrap">
                             {fmt(logged)} / {fmt(item.suggested)}
                           </span>
                         </div>
@@ -351,13 +351,13 @@ export function HomePage({ profile, onProfileUpdate }) {
                         {entries.map(e => (
                           <div key={e.id} className="flex items-center justify-between group/entry pl-9">
                             <div className="flex items-center gap-2 text-xs text-gray-500">
-                              <span className="font-semibold text-gray-300">{fmt(e.amount)}</span>
-                              {e.note && <span className="text-gray-400">— {e.note}</span>}
-                              <span className="text-gray-300">{e.date}</span>
+                              <span className="font-semibold text-gray-700">{fmt(e.amount)}</span>
+                              {e.note && <span className="text-gray-500">— {e.note}</span>}
+                              <span className="text-gray-400">{e.date}</span>
                             </div>
                             <button
                               onClick={() => deleteEntry(item.id, e.id)}
-                              className="text-gray-200 hover:text-red-400 opacity-0 group-hover/entry:opacity-100 transition-opacity text-xs"
+                              className="text-gray-400 hover:text-red-400 opacity-0 group-hover/entry:opacity-100 transition-opacity text-xs"
                             >✕</button>
                           </div>
                         ))}
@@ -401,14 +401,14 @@ export function HomePage({ profile, onProfileUpdate }) {
                 <p className="text-sm font-medium text-gray-500 mb-4">Monthly Progress</p>
                 <CircularProgress value={allocationProgress} size={120} strokeWidth={10} color="#2563eb">
                   <div className="text-center">
-                    <p className="text-xl font-bold text-white">{Math.round(allocationProgress * 100)}%</p>
-                    <p className="text-xs text-gray-400">logged</p>
+                    <p className="text-xl font-bold text-gray-900">{Math.round(allocationProgress * 100)}%</p>
+                    <p className="text-xs text-gray-500">logged</p>
                   </div>
                 </CircularProgress>
                 <div className="mt-4 w-full space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-500">Surplus</span>
-                    <span className="font-semibold">{fmt(surplus)}</span>
+                    <span className="font-semibold text-gray-900">{fmt(surplus)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500">Logged</span>
@@ -421,7 +421,7 @@ export function HomePage({ profile, onProfileUpdate }) {
                     </span>
                   </div>
                 </div>
-                <p className="text-xs text-gray-400 mt-3">{checkedCount} of {allocationItems.length} complete</p>
+                <p className="text-xs text-gray-500 mt-3">{checkedCount} of {allocationItems.length} complete</p>
               </Card>
             </div>
           </div>

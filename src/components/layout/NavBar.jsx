@@ -31,26 +31,26 @@ export function NavBar({ activePage, onNavigate, onEditProfile, onReset, onLogou
   return (
     <>
       {/* Top bar */}
-      <header className="sticky top-0 z-20 flex items-center gap-3 px-4 py-3" style={{ background: '#222222', borderBottom: '1px solid #333' }}>
+      <header className="sticky top-0 z-20 flex items-center gap-3 px-4 py-3" style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0' }}>
         <button
           onClick={() => setOpen(o => !o)}
-          className="flex flex-col justify-center gap-1.5 w-8 h-8 items-center rounded-lg hover:bg-white/10 transition-colors flex-shrink-0"
+          className="flex flex-col justify-center gap-1.5 w-8 h-8 items-center rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0"
           aria-label="Toggle menu"
         >
-          <span className="block w-5 h-0.5 rounded-full bg-gray-300" />
-          <span className="block w-5 h-0.5 rounded-full bg-gray-300" />
-          <span className="block w-5 h-0.5 rounded-full bg-gray-300" />
+          <span className="block w-5 h-0.5 rounded-full bg-gray-500" />
+          <span className="block w-5 h-0.5 rounded-full bg-gray-500" />
+          <span className="block w-5 h-0.5 rounded-full bg-gray-500" />
         </button>
         <div>
-          <h1 className="text-lg font-bold text-white tracking-tight leading-none">advysr</h1>
-          <p className="text-xs text-gray-500 leading-none mt-0.5">Personal Finance Manager</p>
+          <h1 className="text-lg font-bold text-gray-900 tracking-tight leading-none">advysr</h1>
+          <p className="text-xs text-gray-400 leading-none mt-0.5">Personal Finance Manager</p>
         </div>
       </header>
 
       {/* Backdrop */}
       {open && (
         <div
-          className="fixed inset-0 z-30 bg-black/50"
+          className="fixed inset-0 z-30 bg-black/20"
           onClick={() => setOpen(false)}
         />
       )}
@@ -59,20 +59,20 @@ export function NavBar({ activePage, onNavigate, onEditProfile, onReset, onLogou
       <aside
         className="fixed inset-y-0 left-0 z-40 w-64 flex flex-col transition-transform duration-250"
         style={{
-          background: '#1e1e1e',
-          borderRight: '1px solid #333',
+          background: '#ffffff',
+          borderRight: '1px solid #e2e8f0',
           transform: open ? 'translateX(0)' : 'translateX(-100%)',
         }}
       >
         {/* Drawer header */}
-        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid #2e2e2e' }}>
+        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid #f1f5f9' }}>
           <div>
-            <p className="text-base font-bold text-white tracking-tight">advysr</p>
-            {userEmail && <p className="text-xs text-gray-500 truncate max-w-[160px] mt-0.5">{userEmail}</p>}
+            <p className="text-base font-bold text-gray-900 tracking-tight">advysr</p>
+            {userEmail && <p className="text-xs text-gray-400 truncate max-w-[160px] mt-0.5">{userEmail}</p>}
           </div>
           <button
             onClick={() => setOpen(false)}
-            className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-colors"
+            className="w-7 h-7 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -91,13 +91,13 @@ export function NavBar({ activePage, onNavigate, onEditProfile, onReset, onLogou
                 onClick={() => navigate(t.id)}
                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-left"
                 style={{
-                  background: active ? (isAdminTab ? '#7c3aed22' : '#2563eb22') : 'transparent',
-                  color: active ? (isAdminTab ? '#a78bfa' : '#60a5fa') : '#9ca3af',
+                  background: active ? (isAdminTab ? '#f3e8ff' : '#eff6ff') : 'transparent',
+                  color: active ? (isAdminTab ? '#7c3aed' : '#2563eb') : '#64748b',
                 }}
-                onMouseEnter={e => { if (!active) e.currentTarget.style.background = '#ffffff0d'; }}
+                onMouseEnter={e => { if (!active) e.currentTarget.style.background = '#f8fafc'; }}
                 onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}
               >
-                <span style={{ color: active ? (isAdminTab ? '#a78bfa' : '#60a5fa') : '#6b7280' }}>
+                <span style={{ color: active ? (isAdminTab ? '#7c3aed' : '#2563eb') : '#94a3b8' }}>
                   {TAB_ICONS[t.id]}
                 </span>
                 {t.label}
@@ -107,33 +107,33 @@ export function NavBar({ activePage, onNavigate, onEditProfile, onReset, onLogou
         </nav>
 
         {/* Bottom actions */}
-        <div className="px-3 py-3 space-y-0.5" style={{ borderTop: '1px solid #2e2e2e' }}>
+        <div className="px-3 py-3 space-y-0.5" style={{ borderTop: '1px solid #f1f5f9' }}>
           <button
             onClick={() => { onEditProfile(); setOpen(false); }}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white transition-colors text-left"
-            onMouseEnter={e => e.currentTarget.style.background = '#ffffff0d'}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-gray-900 transition-colors text-left"
+            onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
             Edit Profile
           </button>
           <button
             onClick={() => { onLogout(); setOpen(false); }}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white transition-colors text-left"
-            onMouseEnter={e => e.currentTarget.style.background = '#ffffff0d'}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:text-gray-900 transition-colors text-left"
+            onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
             Sign out
           </button>
           <button
             onClick={() => { onReset(); setOpen(false); }}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:text-red-400 transition-colors text-left"
-            onMouseEnter={e => e.currentTarget.style.background = '#7f1d1d22'}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:text-red-600 transition-colors text-left"
+            onMouseEnter={e => e.currentTarget.style.background = '#fff1f2'}
             onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
