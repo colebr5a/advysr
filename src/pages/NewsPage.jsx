@@ -90,11 +90,20 @@ function SkeletonCard() {
   );
 }
 
+// ─── Ticker relevance matching ────────────────────────────────────────────────
+
+function matchTickers(article, tickers) {
+  if (!tickers.length) return [];
+  const haystack = `${article.title || ''} ${article.description || ''}`;
+  return tickers.filter(t => new RegExp(`\\b${t}\\b`, 'i').test(haystack));
+}
+
 // ─── News card ────────────────────────────────────────────────────────────────
 
-function NewsCard({ article }) {
+function NewsCard({ article, heldTickers = [] }) {
   const [imgError, setImgError] = useState(false);
   const hasImage = article.urlToImage && !imgError;
+  const matched = matchTickers(article, heldTickers);
 
   return (
     <a
@@ -102,10 +111,13 @@ function NewsCard({ article }) {
       target="_blank"
       rel="noopener noreferrer"
       className="flex flex-col rounded-2xl overflow-hidden transition-all duration-200 hover:scale-[1.015] hover:shadow-xl group"
-      style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}
+      style={{
+        background: '#ffffff',
+        border: matched.length ? '1px solid #86efac' : '1px solid #e2e8f0',
+      }}
     >
       {/* Image */}
-      <div className="h-44 w-full flex-shrink-0 overflow-hidden" style={{ background: '#f1f5f9' }}>
+      <div className="h-44 w-full flex-shrink-0 overflow-hidden relative" style={{ background: '#f1f5f9' }}>
         {hasImage ? (
           <img
             src={article.urlToImage}
@@ -115,9 +127,17 @@ function NewsCard({ article }) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <svg className="w-10 h-10 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-10 h-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 12h6" />
             </svg>
+          </div>
+        )}
+        {matched.length > 0 && (
+          <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold text-green-700" style={{ background: '#dcfce7', border: '1px solid #86efac' }}>
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+            {matched.slice(0, 3).join(', ')}
           </div>
         )}
       </div>
@@ -125,12 +145,12 @@ function NewsCard({ article }) {
       {/* Content */}
       <div className="p-4 flex flex-col flex-1 gap-2">
         <div className="flex items-center justify-between gap-2">
-          <span className="text-xs font-semibold text-primary-400 truncate">{article.source?.name || 'Unknown'}</span>
+          <span className="text-xs font-semibold text-primary-600 truncate">{article.source?.name || 'Unknown'}</span>
           {article.publishedAt && (
-            <span className="text-xs text-gray-600 flex-shrink-0">{timeAgo(article.publishedAt)}</span>
+            <span className="text-xs text-gray-400 flex-shrink-0">{timeAgo(article.publishedAt)}</span>
           )}
         </div>
-        <h3 className="text-sm font-semibold text-gray-900 leading-snug line-clamp-3 group-hover:text-primary-200 transition-colors">
+        <h3 className="text-sm font-semibold text-gray-900 leading-snug line-clamp-3 group-hover:text-primary-600 transition-colors">
           {article.title}
         </h3>
         {article.description && (
@@ -145,7 +165,11 @@ function NewsCard({ article }) {
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 
-export function NewsPage() {
+export function NewsPage({ profile }) {
+  const heldTickers = (profile?.holdings || [])
+    .map(h => h.ticker?.toUpperCase())
+    .filter(Boolean);
+
   const [category, setCategory] = useState('markets');
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
@@ -255,11 +279,11 @@ export function NewsPage() {
 
       {/* Error */}
       {error && (
-        <div className="flex items-center gap-3 px-4 py-3 rounded-xl" style={{ background: '#3a1a1a', border: '1px solid #7f1d1d40' }}>
-          <svg className="w-4 h-4 text-red-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200">
+          <svg className="w-4 h-4 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <p className="text-sm text-red-400">{error}</p>
+          <p className="text-sm text-red-600">{error}</p>
         </div>
       )}
 
@@ -267,7 +291,7 @@ export function NewsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {loading
           ? Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} />)
-          : articles.map((a, i) => <NewsCard key={i} article={a} />)
+          : articles.map((a, i) => <NewsCard key={i} article={a} heldTickers={heldTickers} />)
         }
       </div>
 

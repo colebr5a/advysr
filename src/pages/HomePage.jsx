@@ -92,7 +92,95 @@ function NetWorthPieChart({ accounts, totalAssets }) {
   );
 }
 
-export function HomePage({ profile, onProfileUpdate }) {
+function GettingStartedCard({ profile, onProfileUpdate, onNavigate }) {
+  const hasAccounts = (profile.accounts || []).some(a => (a.balance || 0) > 0);
+  const hasHoldings = (profile.holdings || []).length > 0;
+  const hasGoals    = (profile.goals || []).length > 0;
+  const allDone     = hasAccounts && hasHoldings && hasGoals;
+  const dismissed   = profile.gettingStartedDismissed;
+
+  if (allDone || dismissed) return null;
+
+  const steps = [
+    {
+      done: hasAccounts,
+      label: 'Add your account balances',
+      sub:   'Enter balances for checking, savings, investments',
+      action: null, // on this page, just scroll
+    },
+    {
+      done: hasHoldings,
+      label: 'Import your portfolio',
+      sub:   'Upload a CSV from your brokerage',
+      action: () => onNavigate('portfolio'),
+    },
+    {
+      done: hasGoals,
+      label: 'Set your first financial goal',
+      sub:   'Track savings milestones like an emergency fund',
+      action: () => onNavigate('goals'),
+    },
+  ];
+
+  const doneCount = steps.filter(s => s.done).length;
+
+  return (
+    <Card style={{ border: '1px solid #bfdbfe', background: '#eff6ff' }}>
+      <div className="flex items-start justify-between gap-4 mb-4">
+        <div>
+          <p className="text-xs font-semibold text-primary-600 uppercase tracking-wide mb-0.5">Getting Started</p>
+          <h3 className="text-base font-bold text-gray-900">Set up your financial dashboard</h3>
+          <p className="text-sm text-gray-500 mt-0.5">{doneCount} of {steps.length} steps complete</p>
+        </div>
+        <button
+          onClick={() => onProfileUpdate({ ...profile, gettingStartedDismissed: true })}
+          className="text-gray-400 hover:text-gray-600 flex-shrink-0"
+          aria-label="Dismiss"
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Progress bar */}
+      <div className="h-1.5 rounded-full bg-blue-100 mb-4">
+        <div
+          className="h-1.5 rounded-full bg-primary-500 transition-all duration-500"
+          style={{ width: `${(doneCount / steps.length) * 100}%` }}
+        />
+      </div>
+
+      <div className="space-y-3">
+        {steps.map((s, i) => (
+          <div key={i} className="flex items-start gap-3">
+            <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${s.done ? 'bg-green-500' : 'bg-white border-2 border-gray-300'}`}>
+              {s.done && (
+                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className={`text-sm font-semibold ${s.done ? 'line-through text-gray-400' : 'text-gray-900'}`}>{s.label}</p>
+              {!s.done && <p className="text-xs text-gray-500 mt-0.5">{s.sub}</p>}
+            </div>
+            {!s.done && s.action && (
+              <button
+                onClick={s.action}
+                className="text-xs font-semibold text-primary-600 hover:text-primary-800 flex-shrink-0 mt-0.5"
+              >
+                Go →
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+export function HomePage({ profile, onProfileUpdate, onNavigate }) {
   const currentMonthIndex = new Date().getMonth();
   const [activeMonth, setActiveMonth] = useState(currentMonthIndex);
   // per-item entry forms: { [monthKey_ruleId]: { amount: '', note: '' } }
@@ -185,6 +273,8 @@ export function HomePage({ profile, onProfileUpdate }) {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8 space-y-8">
+      <GettingStartedCard profile={profile} onProfileUpdate={onProfileUpdate} onNavigate={onNavigate} />
+
       {/* Net Worth Hero */}
       <Card>
         <div className="flex flex-col sm:flex-row items-center gap-6">

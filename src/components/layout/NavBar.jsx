@@ -10,7 +10,42 @@ const TAB_ICONS = {
   admin:     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>,
 };
 
-export function NavBar({ activePage, onNavigate, onEditProfile, onReset, onLogout, isAdmin, userEmail }) {
+function SaveIndicator({ saveStatus, lastSaved }) {
+  if (saveStatus === 'idle' && !lastSaved) return null;
+
+  if (saveStatus === 'saving') {
+    return (
+      <span className="flex items-center gap-1 text-xs text-gray-400">
+        <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+        Saving…
+      </span>
+    );
+  }
+  if (saveStatus === 'error') {
+    return <span className="text-xs text-red-500">Save failed</span>;
+  }
+  if (saveStatus === 'saved' || lastSaved) {
+    return (
+      <span className="flex items-center gap-1 text-xs text-green-600">
+        <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
+        {saveStatus === 'saved' ? 'Saved' : `Saved ${timeSince(lastSaved)}`}
+      </span>
+    );
+  }
+  return null;
+}
+
+function timeSince(date) {
+  if (!date) return '';
+  const mins = Math.floor((Date.now() - date.getTime()) / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  return `${Math.floor(mins / 60)}h ago`;
+}
+
+export function NavBar({ activePage, onNavigate, onEditProfile, onReset, onLogout, isAdmin, userEmail, saveStatus, lastSaved }) {
   const [open, setOpen] = useState(false);
 
   const tabs = [
@@ -41,9 +76,12 @@ export function NavBar({ activePage, onNavigate, onEditProfile, onReset, onLogou
           <span className="block w-5 h-0.5 rounded-full bg-gray-500" />
           <span className="block w-5 h-0.5 rounded-full bg-gray-500" />
         </button>
-        <div>
-          <h1 className="text-lg font-bold text-gray-900 tracking-tight leading-none">advysr</h1>
-          <p className="text-xs text-gray-400 leading-none mt-0.5">Personal Finance Manager</p>
+        <div className="flex-1 flex items-center justify-between">
+          <div>
+            <h1 className="text-lg font-bold text-gray-900 tracking-tight leading-none">advysr</h1>
+            <p className="text-xs text-gray-400 leading-none mt-0.5">Personal Finance Manager</p>
+          </div>
+          <SaveIndicator saveStatus={saveStatus} lastSaved={lastSaved} />
         </div>
       </header>
 

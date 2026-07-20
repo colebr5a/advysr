@@ -16,7 +16,7 @@ import { NewsPage } from './pages/NewsPage.jsx';
 
 function FullScreenSpinner() {
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: '#1a1a1a' }}>
+    <div className="min-h-screen flex items-center justify-center" style={{ background: '#f8fafc' }}>
       <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin" />
     </div>
   );
@@ -31,6 +31,8 @@ export default function App() {
   const [activePage, setActivePage]     = useState('home');
   const [pinUnlocked, setPinUnlocked]   = useState(false);
   const [showAuth, setShowAuth]         = useState(false);
+  const [saveStatus, setSaveStatus]     = useState('idle'); // 'idle' | 'saving' | 'saved' | 'error'
+  const [lastSaved, setLastSaved]       = useState(null);
 
   // Load profile from Supabase when user changes
   useEffect(() => {
@@ -64,10 +66,16 @@ export default function App() {
 
   async function handleProfileUpdate(updated) {
     setProfile(updated); // optimistic
+    setSaveStatus('saving');
     try {
       await saveProfile(user.id, user.email, updated);
+      setLastSaved(new Date());
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 3000);
     } catch (err) {
       console.error('Save failed:', err);
+      setSaveStatus('error');
+      setTimeout(() => setSaveStatus('idle'), 4000);
     }
   }
 
@@ -133,12 +141,14 @@ export default function App() {
         onLogout={handleLogout}
         isAdmin={isAdmin}
         userEmail={user.email}
+        saveStatus={saveStatus}
+        lastSaved={lastSaved}
       />
-      {activePage === 'home'      && <HomePage profile={profile} onProfileUpdate={handleProfileUpdate} />}
+      {activePage === 'home'      && <HomePage profile={profile} onProfileUpdate={handleProfileUpdate} onNavigate={setActivePage} />}
       {activePage === 'goals'     && <GoalsPage profile={profile} onProfileUpdate={handleProfileUpdate} />}
       {activePage === 'portfolio' && <PortfolioPage profile={profile} onProfileUpdate={handleProfileUpdate} />}
       {activePage === 'investing' && <InvestingPage profile={profile} />}
-      {activePage === 'news'      && <NewsPage />}
+      {activePage === 'news'      && <NewsPage profile={profile} />}
       {activePage === 'research'   && <ResearchPage profile={profile} />}
       {activePage === 'admin'     && isAdmin && <AdminPage />}
     </div>
