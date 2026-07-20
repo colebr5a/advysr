@@ -57,7 +57,7 @@ function ResearchPanel({ profile, surplus }) {
       <div className="flex items-center gap-3 mb-4">
         <div className="w-8 h-8 rounded-xl bg-primary-600 flex items-center justify-center text-white text-sm font-bold">A</div>
         <div>
-          <h2 className="text-lg font-bold text-white">Investment Research</h2>
+          <h2 className="text-lg font-bold text-gray-900">Investment Research</h2>
           <p className="text-xs text-gray-500">Powered by Claude — personalized to your profile</p>
         </div>
       </div>
@@ -89,7 +89,7 @@ function ResearchPanel({ profile, surplus }) {
                 className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
                   m.role === 'user'
                     ? 'bg-primary-600 text-white rounded-tr-sm'
-                    : 'text-gray-200 rounded-tl-sm'
+                    : 'text-gray-700 rounded-tl-sm'
                 }`}
                 style={m.role === 'assistant' ? { background: '#f1f5f9' } : {}}
               >
