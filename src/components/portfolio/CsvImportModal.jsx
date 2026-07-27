@@ -165,7 +165,7 @@ function PreviewStep({ parseResult, onConfirm, onBack }) {
                   key={h.id}
                   style={{ background: i % 2 === 0 ? '#ffffff' : '#f8fafc', borderTop: '1px solid #f1f5f9' }}
                 >
-                  <td className="px-3 py-2 font-mono font-bold text-gray-900 text-sm">{h.ticker}</td>
+                  <td className="px-3 py-2 font-bold text-gray-900 text-sm">{h.ticker}</td>
                   <td className="px-3 py-2 text-gray-500 max-w-[140px] truncate hidden sm:table-cell">{h.name || '—'}</td>
                   <td className="px-3 py-2 text-right font-semibold text-gray-900">
                     {h.currentValue != null ? fmt(h.currentValue) : '—'}

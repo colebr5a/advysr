@@ -381,7 +381,7 @@ export function InvestingPage({ profile }) {
               <p className="text-xs text-gray-500 mb-2">{s.reason}</p>
               <div className="rounded-lg px-3 py-2" style={{ background: '#f1f5f9' }}>
                 <p className="text-xs text-gray-400 font-medium">Examples</p>
-                <p className="text-xs text-gray-600 font-mono mt-0.5">{s.examples}</p>
+                <p className="text-xs text-gray-600 mt-0.5">{s.examples}</p>
               </div>
             </Card>
           ))}

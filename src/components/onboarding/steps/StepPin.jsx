@@ -24,7 +24,7 @@ export function StepPin({ value, onChange, onNext, onBack }) {
     >
       <div className="space-y-4">
         <div>
-          <label className="text-sm font-medium text-gray-400 block mb-2">Choose a 4-digit PIN</label>
+          <label className="text-sm font-medium text-gray-500 block mb-2">Choose a 4-digit PIN</label>
           <div className="flex gap-3 justify-center">
             {[0,1,2,3].map(i => (
               <div
@@ -59,8 +59,8 @@ export function StepPin({ value, onChange, onNext, onBack }) {
                   else if (k !== '' && value.length < 4) { onChange(value + k); }
                   setError('');
                 }}
-                className={`h-12 rounded-xl text-lg font-semibold transition-colors ${k === '' ? 'invisible' : 'text-white hover:bg-primary-700'}`}
-                style={{ background: k === '' ? 'transparent' : '#f8fafc' }}
+                className={`h-12 rounded-xl text-lg font-semibold transition-colors ${k === '' ? 'invisible' : 'text-gray-900 hover:bg-primary-100'}`}
+                style={{ background: k === '' ? 'transparent' : '#e8f5e9' }}
               >
                 {k}
               </button>
@@ -69,7 +69,7 @@ export function StepPin({ value, onChange, onNext, onBack }) {
         </div>
 
         <div>
-          <label className="text-sm font-medium text-gray-400 block mb-2">Confirm PIN</label>
+          <label className="text-sm font-medium text-gray-500 block mb-2">Confirm PIN</label>
           <div className="flex gap-3 justify-center">
             {[0,1,2,3].map(i => (
               <div
@@ -91,8 +91,8 @@ export function StepPin({ value, onChange, onNext, onBack }) {
                   else if (k !== '' && confirm.length < 4) { setConfirm(c => c + k); }
                   setError('');
                 }}
-                className={`h-12 rounded-xl text-lg font-semibold transition-colors ${k === '' ? 'invisible' : 'text-white hover:bg-primary-700'}`}
-                style={{ background: k === '' ? 'transparent' : '#f8fafc' }}
+                className={`h-12 rounded-xl text-lg font-semibold transition-colors ${k === '' ? 'invisible' : 'text-gray-900 hover:bg-primary-100'}`}
+                style={{ background: k === '' ? 'transparent' : '#e8f5e9' }}
               >
                 {k}
               </button>

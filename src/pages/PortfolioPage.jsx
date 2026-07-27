@@ -257,7 +257,7 @@ function HoldingsTable({ holdings, totalValue }) {
                     className="hover:bg-white/5 transition-colors"
                   >
                     <td className="px-4 py-3">
-                      <span className="font-mono font-bold text-gray-900">{h.ticker}</span>
+                      <span className="font-bold text-gray-900">{h.ticker}</span>
                     </td>
                     <td className="px-4 py-3 text-gray-400 max-w-[180px] truncate hidden sm:table-cell">
                       {h.name || '—'}
