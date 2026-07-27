@@ -17,7 +17,7 @@ const DEFAULT_ACCOUNTS = [
 let accId = 10;
 let entryCtr = 5000;
 
-const ACCOUNT_COLORS = ['#16a34a','#22c55e','#4ade80','#86efac','#a3e635','#facc15','#fb923c','#f87171'];
+const ACCOUNT_COLORS = ['#2D6A4F','#40916C','#74C69D','#95D5B2','#74C69D','#facc15','#fb923c','#f87171'];
 
 function classifyAccount(label) {
   const l = label.toLowerCase();
@@ -125,7 +125,7 @@ function GettingStartedCard({ profile, onProfileUpdate, onNavigate }) {
   const doneCount = steps.filter(s => s.done).length;
 
   return (
-    <Card style={{ border: '1px solid #bfdbfe', background: '#eff6ff' }}>
+    <Card style={{ border: '1px solid #B7E4C7', background: '#F2FBF4' }}>
       <div className="flex items-start justify-between gap-4 mb-4">
         <div>
           <p className="text-xs font-semibold text-primary-600 uppercase tracking-wide mb-0.5">Getting Started</p>
@@ -144,7 +144,7 @@ function GettingStartedCard({ profile, onProfileUpdate, onNavigate }) {
       </div>
 
       {/* Progress bar */}
-      <div className="h-1.5 rounded-full bg-blue-100 mb-4">
+      <div className="h-1.5 rounded-full bg-primary-100 mb-4">
         <div
           className="h-1.5 rounded-full bg-primary-500 transition-all duration-500"
           style={{ width: `${(doneCount / steps.length) * 100}%` }}
@@ -336,7 +336,7 @@ export function HomePage({ profile, onProfileUpdate, onNavigate }) {
                 className="text-xs font-medium text-gray-600 w-full border-0 bg-transparent focus:outline-none focus:bg-transparent rounded px-0 mb-1 truncate"
               />
               {goalPct != null && (
-                <p className="text-xs mb-2" style={{ color: onTarget ? '#4ade80' : '#f59e0b' }}>
+                <p className="text-xs mb-2" style={{ color: onTarget ? '#74C69D' : '#f59e0b' }}>
                   Goal: {goalPct}% {onTarget ? '✓' : `· You: ${currentPct}%`}
                 </p>
               )}
@@ -489,7 +489,7 @@ export function HomePage({ profile, onProfileUpdate, onNavigate }) {
             <div className="space-y-4">
               <Card className="flex flex-col items-center py-6">
                 <p className="text-sm font-medium text-gray-500 mb-4">Monthly Progress</p>
-                <CircularProgress value={allocationProgress} size={120} strokeWidth={10} color="#2563eb">
+                <CircularProgress value={allocationProgress} size={120} strokeWidth={10} color="#2D6A4F">
                   <div className="text-center">
                     <p className="text-xl font-bold text-gray-900">{Math.round(allocationProgress * 100)}%</p>
                     <p className="text-xs text-gray-500">logged</p>

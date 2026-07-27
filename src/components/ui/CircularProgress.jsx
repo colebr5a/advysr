@@ -1,4 +1,4 @@
-export function CircularProgress({ value, size = 80, strokeWidth = 8, color = '#2563eb', children }) {
+export function CircularProgress({ value, size = 80, strokeWidth = 8, color = '#2D6A4F', children }) {
   const r = (size - strokeWidth) / 2;
   const circ = 2 * Math.PI * r;
   const offset = circ * (1 - Math.min(1, Math.max(0, value)));

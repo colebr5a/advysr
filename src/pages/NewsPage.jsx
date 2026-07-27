@@ -113,7 +113,7 @@ function NewsCard({ article, heldTickers = [] }) {
       className="flex flex-col rounded-2xl overflow-hidden transition-all duration-200 hover:scale-[1.015] hover:shadow-xl group"
       style={{
         background: '#ffffff',
-        border: matched.length ? '1px solid #86efac' : '1px solid #e2e8f0',
+        border: matched.length ? '1px solid #95D5B2' : '1px solid #e2e8f0',
       }}
     >
       {/* Image */}
@@ -133,7 +133,7 @@ function NewsCard({ article, heldTickers = [] }) {
           </div>
         )}
         {matched.length > 0 && (
-          <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold text-green-700" style={{ background: '#dcfce7', border: '1px solid #86efac' }}>
+          <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold text-green-700" style={{ background: '#D8F3DC', border: '1px solid #95D5B2' }}>
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
             </svg>

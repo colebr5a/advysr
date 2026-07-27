@@ -104,7 +104,7 @@ export function GoalsPage({ profile, onProfileUpdate }) {
       {/* Summary bar */}
       {goals.length > 0 && (
         <Card className="flex items-center gap-6">
-          <CircularProgress value={overallPct} size={80} strokeWidth={8} color="#2563eb">
+          <CircularProgress value={overallPct} size={80} strokeWidth={8} color="#2D6A4F">
             <div className="text-center">
               <p className="text-sm font-bold text-gray-900">{Math.round(overallPct * 100)}%</p>
             </div>

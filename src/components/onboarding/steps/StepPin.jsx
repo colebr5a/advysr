@@ -30,7 +30,7 @@ export function StepPin({ value, onChange, onNext, onBack }) {
               <div
                 key={i}
                 className="w-12 h-14 rounded-xl flex items-center justify-center text-2xl font-bold border-2 transition-colors"
-                style={{ background: '#2c2c2c', borderColor: value.length > i ? '#16a34a' : '#3a3a3a', color: 'white' }}
+                style={{ background: '#ffffff', borderColor: value.length > i ? '#2D6A4F' : '#e2e8f0', color: '#0f172a' }}
               >
                 {value.length > i ? '●' : ''}
               </div>
@@ -60,7 +60,7 @@ export function StepPin({ value, onChange, onNext, onBack }) {
                   setError('');
                 }}
                 className={`h-12 rounded-xl text-lg font-semibold transition-colors ${k === '' ? 'invisible' : 'text-white hover:bg-primary-700'}`}
-                style={{ background: k === '' ? 'transparent' : '#383838' }}
+                style={{ background: k === '' ? 'transparent' : '#f8fafc' }}
               >
                 {k}
               </button>
@@ -75,7 +75,7 @@ export function StepPin({ value, onChange, onNext, onBack }) {
               <div
                 key={i}
                 className="w-12 h-14 rounded-xl flex items-center justify-center text-2xl font-bold border-2 transition-colors"
-                style={{ background: '#2c2c2c', borderColor: confirm.length > i ? '#16a34a' : '#3a3a3a', color: 'white' }}
+                style={{ background: '#ffffff', borderColor: confirm.length > i ? '#2D6A4F' : '#e2e8f0', color: '#0f172a' }}
               >
                 {confirm.length > i ? '●' : ''}
               </div>
@@ -92,7 +92,7 @@ export function StepPin({ value, onChange, onNext, onBack }) {
                   setError('');
                 }}
                 className={`h-12 rounded-xl text-lg font-semibold transition-colors ${k === '' ? 'invisible' : 'text-white hover:bg-primary-700'}`}
-                style={{ background: k === '' ? 'transparent' : '#383838' }}
+                style={{ background: k === '' ? 'transparent' : '#f8fafc' }}
               >
                 {k}
               </button>

@@ -129,13 +129,13 @@ export function NavBar({ activePage, onNavigate, onEditProfile, onReset, onLogou
                 onClick={() => navigate(t.id)}
                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-left"
                 style={{
-                  background: active ? (isAdminTab ? '#f3e8ff' : '#eff6ff') : 'transparent',
-                  color: active ? (isAdminTab ? '#7c3aed' : '#2563eb') : '#64748b',
+                  background: active ? (isAdminTab ? '#f3e8ff' : '#D8F3DC') : 'transparent',
+                  color: active ? (isAdminTab ? '#7c3aed' : '#1B4332') : '#64748b',
                 }}
                 onMouseEnter={e => { if (!active) e.currentTarget.style.background = '#f8fafc'; }}
                 onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}
               >
-                <span style={{ color: active ? (isAdminTab ? '#7c3aed' : '#2563eb') : '#94a3b8' }}>
+                <span style={{ color: active ? (isAdminTab ? '#7c3aed' : '#1B4332') : '#94a3b8' }}>
                   {TAB_ICONS[t.id]}
                 </span>
                 {t.label}

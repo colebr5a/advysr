@@ -35,8 +35,8 @@ export function PinLock({ onUnlock, onSignOut }) {
               key={i}
               className="w-4 h-4 rounded-full border-2 transition-all"
               style={{
-                borderColor: error ? '#ef4444' : '#16a34a',
-                background: entry.length > i ? (error ? '#ef4444' : '#16a34a') : 'transparent',
+                borderColor: error ? '#ef4444' : '#2D6A4F',
+                background: entry.length > i ? (error ? '#ef4444' : '#2D6A4F') : 'transparent',
               }}
             />
           ))}

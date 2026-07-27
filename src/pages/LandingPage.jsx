@@ -1,13 +1,13 @@
 export function LandingPage({ onGetStarted, onSignIn }) {
   return (
-    <div style={{ background: '#f8fafc', color: '#0f172a', fontFamily: 'Manrope, sans-serif' }}>
+    <div style={{ background: '#f8fafc', color: '#0f172a' }}>
 
       {/* Nav */}
       <header className="sticky top-0 z-50 flex items-center justify-between px-6 py-4" style={{ background: 'rgba(248,250,252,0.9)', backdropFilter: 'blur(12px)', borderBottom: '1px solid #e2e8f0' }}>
-        <span className="text-xl font-bold tracking-tight" style={{ color: '#16a34a' }}>advysr</span>
+        <span className="text-xl font-bold tracking-tight" style={{ color: '#2D6A4F' }}>advysr</span>
         <div className="flex items-center gap-3">
           <button onClick={onSignIn} className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors px-3 py-1.5">Sign in</button>
-          <button onClick={onGetStarted} className="text-sm font-semibold px-4 py-2 rounded-xl transition-all hover:opacity-90" style={{ background: '#16a34a', color: 'white' }}>Get started free</button>
+          <button onClick={onGetStarted} className="text-sm font-semibold px-4 py-2 rounded-xl transition-all hover:opacity-90" style={{ background: '#2D6A4F', color: 'white' }}>Get started free</button>
         </div>
       </header>
 
@@ -15,21 +15,19 @@ export function LandingPage({ onGetStarted, onSignIn }) {
       <section className="max-w-6xl mx-auto px-6 pt-20 pb-16 flex flex-col lg:flex-row items-center gap-12">
         {/* Left */}
         <div className="flex-1 text-center lg:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-6" style={{ background: '#dcfce7', color: '#15803d', border: '1px solid #bbf7d0' }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#16a34a', display: 'inline-block' }} />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-6" style={{ background: '#D8F3DC', color: '#1B4332', border: '1px solid #B7E4C7' }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#2D6A4F', display: 'inline-block' }} />
             Always free · No credit card required
           </div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight mb-5 text-gray-900" style={{ letterSpacing: '-0.02em' }}>
-            Track your net worth,<br />
-            <span style={{ color: '#16a34a' }}>plan your future,</span><br />
-            and manage your money<br />
-            — all in one place.
+          <h1 className="text-4xl sm:text-5xl leading-tight mb-5 text-gray-900" style={{ letterSpacing: '-0.01em' }}>
+            Your wealth,<br />
+            <em style={{ color: '#1B4332', fontStyle: 'italic' }}>made clear.</em>
           </h1>
           <p className="text-gray-500 text-lg mb-8 max-w-lg mx-auto lg:mx-0">
-            advysr is a personal wealth manager and financial planning tool built for real people — not Wall Street. Set goals, allocate your surplus, and get AI-powered investing guidance tailored to you.
+            A personal wealth manager for real people — not Wall Street. Set goals, allocate your surplus, and get AI-powered investing guidance tailored to you.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-            <button onClick={onGetStarted} className="px-6 py-3.5 rounded-2xl text-base font-bold transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: '#16a34a', color: 'white' }}>
+            <button onClick={onGetStarted} className="px-6 py-3.5 rounded-2xl text-base font-bold transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: '#2D6A4F', color: 'white' }}>
               Start for free →
             </button>
             <button onClick={onSignIn} className="px-6 py-3.5 rounded-2xl text-base font-semibold text-gray-600 hover:text-gray-900 transition-all" style={{ border: '1px solid #e2e8f0', background: '#ffffff' }}>
@@ -44,10 +42,10 @@ export function LandingPage({ onGetStarted, onSignIn }) {
           <div className="rounded-3xl overflow-hidden shadow-xl" style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>
             {/* Fake nav bar */}
             <div className="flex items-center justify-between px-4 py-3" style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0' }}>
-              <span className="text-sm font-bold" style={{ color: '#16a34a' }}>advysr</span>
+              <span className="text-sm font-bold" style={{ color: '#2D6A4F' }}>advysr</span>
               <div className="flex gap-1">
                 {['Home','Goals','Investing','Research'].map(t => (
-                  <span key={t} className="text-xs px-2.5 py-1 rounded-lg" style={{ background: t === 'Home' ? '#16a34a' : 'transparent', color: t === 'Home' ? 'white' : '#94a3b8' }}>{t}</span>
+                  <span key={t} className="text-xs px-2.5 py-1 rounded-lg" style={{ background: t === 'Home' ? '#2D6A4F' : 'transparent', color: t === 'Home' ? 'white' : '#94a3b8' }}>{t}</span>
                 ))}
               </div>
             </div>
@@ -63,11 +61,11 @@ export function LandingPage({ onGetStarted, onSignIn }) {
                 {/* Mini pie chart */}
                 <svg width="80" height="80" viewBox="0 0 80 80">
                   <circle cx="40" cy="40" r="28" fill="none" stroke="#f1f5f9" strokeWidth="16" />
-                  <circle cx="40" cy="40" r="28" fill="none" stroke="#16a34a" strokeWidth="16"
+                  <circle cx="40" cy="40" r="28" fill="none" stroke="#2D6A4F" strokeWidth="16"
                     strokeDasharray={`${0.43 * 175.9} ${175.9}`} strokeDashoffset="44" strokeLinecap="butt" />
-                  <circle cx="40" cy="40" r="28" fill="none" stroke="#22c55e" strokeWidth="16"
+                  <circle cx="40" cy="40" r="28" fill="none" stroke="#40916C" strokeWidth="16"
                     strokeDasharray={`${0.26 * 175.9} ${175.9}`} strokeDashoffset={`${-(0.43 * 175.9) + 44}`} strokeLinecap="butt" />
-                  <circle cx="40" cy="40" r="28" fill="none" stroke="#4ade80" strokeWidth="16"
+                  <circle cx="40" cy="40" r="28" fill="none" stroke="#74C69D" strokeWidth="16"
                     strokeDasharray={`${0.19 * 175.9} ${175.9}`} strokeDashoffset={`${-(0.69 * 175.9) + 44}`} strokeLinecap="butt" />
                   <circle cx="40" cy="40" r="22" fill="#ffffff" />
                 </svg>
@@ -75,10 +73,10 @@ export function LandingPage({ onGetStarted, onSignIn }) {
               {/* Accounts row */}
               <div className="grid grid-cols-2 gap-2">
                 {[
-                  { label: 'Checking', val: '$8,200', color: '#16a34a' },
-                  { label: 'HYSA', val: '$12,500', color: '#22c55e' },
-                  { label: 'Roth IRA', val: '$18,400', color: '#4ade80' },
-                  { label: 'Brokerage', val: '$8,732', color: '#a3e635' },
+                  { label: 'Checking', val: '$8,200', color: '#2D6A4F' },
+                  { label: 'HYSA', val: '$12,500', color: '#40916C' },
+                  { label: 'Roth IRA', val: '$18,400', color: '#74C69D' },
+                  { label: 'Brokerage', val: '$8,732', color: '#74C69D' },
                 ].map(a => (
                   <div key={a.label} className="rounded-xl p-3" style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>
                     <div className="flex items-center gap-1.5 mb-1">
@@ -98,16 +96,16 @@ export function LandingPage({ onGetStarted, onSignIn }) {
                   { label: 'Brokerage Investment', pct: 20, checked: false },
                 ].map(item => (
                   <div key={item.label} className="flex items-center gap-3 mb-2">
-                    <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: item.checked ? '#16a34a' : '#ffffff', border: item.checked ? 'none' : '1px solid #d1d5db' }}>
+                    <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: item.checked ? '#2D6A4F' : '#ffffff', border: item.checked ? 'none' : '1px solid #d1d5db' }}>
                       {item.checked && <svg width="8" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round"/></svg>}
                     </div>
                     <div className="flex-1">
                       <div className="flex justify-between text-xs mb-0.5">
                         <span className="text-gray-600">{item.label}</span>
-                        <span style={{ color: '#16a34a' }}>{item.pct}%</span>
+                        <span style={{ color: '#2D6A4F' }}>{item.pct}%</span>
                       </div>
                       <div className="h-1 rounded-full" style={{ background: '#f1f5f9' }}>
-                        <div className="h-1 rounded-full" style={{ width: `${item.pct}%`, background: '#16a34a' }} />
+                        <div className="h-1 rounded-full" style={{ width: `${item.pct}%`, background: '#2D6A4F' }} />
                       </div>
                     </div>
                   </div>
@@ -128,7 +126,7 @@ export function LandingPage({ onGetStarted, onSignIn }) {
             { val: '100%', label: 'Private & encrypted' },
           ].map(s => (
             <div key={s.label}>
-              <p className="text-2xl font-extrabold" style={{ color: '#16a34a' }}>{s.val}</p>
+              <p className="text-2xl font-extrabold" style={{ color: '#2D6A4F' }}>{s.val}</p>
               <p className="text-xs text-gray-500 mt-1">{s.label}</p>
             </div>
           ))}
@@ -138,7 +136,7 @@ export function LandingPage({ onGetStarted, onSignIn }) {
       {/* Features */}
       <section className="max-w-5xl mx-auto px-6 py-20">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-extrabold text-gray-900 mb-3">Everything you need to build wealth</h2>
+          <h2 className="text-3xl text-gray-900 mb-3">Everything you need to build wealth</h2>
           <p className="text-gray-500">A complete picture of your finances, not just a spreadsheet.</p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -184,11 +182,11 @@ export function LandingPage({ onGetStarted, onSignIn }) {
       </section>
 
       {/* AI Section */}
-      <section className="py-16" style={{ background: '#f0fdf4', borderTop: '1px solid #bbf7d0', borderBottom: '1px solid #bbf7d0' }}>
+      <section className="py-16" style={{ background: '#F2FBF4', borderTop: '1px solid #B7E4C7', borderBottom: '1px solid #B7E4C7' }}>
         <div className="max-w-5xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-10">
           <div className="flex-1">
-            <div className="text-xs font-semibold mb-3 px-3 py-1 rounded-full inline-block" style={{ background: '#dcfce7', color: '#15803d', border: '1px solid #bbf7d0' }}>Powered by Claude AI</div>
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-4">Your personal AI financial advisor</h2>
+            <div className="text-xs font-semibold mb-3 px-3 py-1 rounded-full inline-block" style={{ background: '#D8F3DC', color: '#1B4332', border: '1px solid #B7E4C7' }}>Powered by Claude AI</div>
+            <h2 className="text-3xl text-gray-900 mb-4">Your personal AI financial advisor</h2>
             <p className="text-gray-500 leading-relaxed mb-6">
               Ask anything about investing, markets, or your financial strategy. advysr's AI research tab uses Anthropic's Claude to give you thoughtful, personalized answers — not generic advice.
             </p>
@@ -200,7 +198,7 @@ export function LandingPage({ onGetStarted, onSignIn }) {
                 '"Is now a good time to invest in tech stocks?"',
               ].map(q => (
                 <li key={q} className="flex items-start gap-2 text-sm text-gray-600">
-                  <span style={{ color: '#16a34a', marginTop: 2 }}>→</span>
+                  <span style={{ color: '#2D6A4F', marginTop: 2 }}>→</span>
                   <span className="italic">{q}</span>
                 </li>
               ))}
@@ -211,7 +209,7 @@ export function LandingPage({ onGetStarted, onSignIn }) {
             <div className="px-4 py-3 text-xs font-semibold text-gray-500" style={{ borderBottom: '1px solid #e2e8f0' }}>Investment Research</div>
             <div className="p-4 space-y-3" style={{ background: '#f8fafc' }}>
               <div className="flex justify-end">
-                <div className="rounded-2xl rounded-tr-sm px-3 py-2 text-sm max-w-[80%]" style={{ background: '#16a34a', color: 'white' }}>
+                <div className="rounded-2xl rounded-tr-sm px-3 py-2 text-sm max-w-[80%]" style={{ background: '#2D6A4F', color: 'white' }}>
                   What sectors should I focus on given my moderate risk?
                 </div>
               </div>
@@ -221,14 +219,14 @@ export function LandingPage({ onGetStarted, onSignIn }) {
                 </div>
               </div>
               <div className="flex justify-end">
-                <div className="rounded-2xl rounded-tr-sm px-3 py-2 text-sm max-w-[80%]" style={{ background: '#16a34a', color: 'white' }}>
+                <div className="rounded-2xl rounded-tr-sm px-3 py-2 text-sm max-w-[80%]" style={{ background: '#2D6A4F', color: 'white' }}>
                   What about VTI vs VOO?
                 </div>
               </div>
               <div className="flex items-center gap-1 px-1">
-                <div className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: '#16a34a', animationDelay: '0ms' }} />
-                <div className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: '#16a34a', animationDelay: '150ms' }} />
-                <div className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: '#16a34a', animationDelay: '300ms' }} />
+                <div className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: '#2D6A4F', animationDelay: '0ms' }} />
+                <div className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: '#2D6A4F', animationDelay: '150ms' }} />
+                <div className="w-1.5 h-1.5 rounded-full animate-bounce" style={{ background: '#2D6A4F', animationDelay: '300ms' }} />
               </div>
             </div>
           </div>
@@ -238,7 +236,7 @@ export function LandingPage({ onGetStarted, onSignIn }) {
       {/* Security */}
       <section className="max-w-4xl mx-auto px-6 py-20">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-extrabold text-gray-900 mb-3">Built with your privacy in mind</h2>
+          <h2 className="text-3xl text-gray-900 mb-3">Built with your privacy in mind</h2>
           <p className="text-gray-500">Your financial data is sensitive. We treat it that way.</p>
         </div>
         <div className="grid sm:grid-cols-2 gap-4">
@@ -276,20 +274,20 @@ export function LandingPage({ onGetStarted, onSignIn }) {
       </section>
 
       {/* Free callout */}
-      <section className="mx-4 sm:mx-auto max-w-4xl mb-16 rounded-3xl px-8 py-12 text-center" style={{ background: 'linear-gradient(135deg, #16a34a, #15803d)', border: '1px solid #15803d' }}>
+      <section className="mx-4 sm:mx-auto max-w-4xl mb-16 rounded-3xl px-8 py-12 text-center" style={{ background: 'linear-gradient(135deg, #2D6A4F, #1B4332)', border: '1px solid #1B4332' }}>
         <p className="text-xs font-semibold mb-3 text-green-200">PRICING</p>
-        <h2 className="text-4xl font-extrabold mb-4 text-white">Free. Forever.</h2>
+        <h2 className="text-4xl mb-4 text-white">Free. Forever.</h2>
         <p className="text-green-100 max-w-md mx-auto mb-8">
           No subscription. No freemium limits. No hidden fees. advysr is completely free — every feature, for every user, always.
         </p>
-        <button onClick={onGetStarted} className="px-8 py-4 rounded-2xl text-base font-bold transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: '#ffffff', color: '#16a34a' }}>
+        <button onClick={onGetStarted} className="px-8 py-4 rounded-2xl text-base font-bold transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: '#ffffff', color: '#2D6A4F' }}>
           Create your free account →
         </button>
       </section>
 
       {/* Footer */}
       <footer className="text-center py-8 text-xs text-gray-400" style={{ borderTop: '1px solid #e2e8f0' }}>
-        <p className="font-bold mb-1" style={{ color: '#16a34a' }}>advysr</p>
+        <p className="font-bold mb-1" style={{ color: '#2D6A4F' }}>advysr</p>
         <p>Personal Finance Manager · Free · Private · AI-powered</p>
       </footer>
 

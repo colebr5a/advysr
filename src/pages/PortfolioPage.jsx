@@ -399,7 +399,7 @@ function BenchmarkCard({ portfolioReturn, sp500YTD, loading }) {
           {!loading && (
             <div
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-sm font-semibold"
-              style={{ background: outperforming ? '#16a34a22' : '#dc262622', border: `1px solid ${outperforming ? '#16a34a44' : '#dc262644'}` }}
+              style={{ background: outperforming ? '#2D6A4F22' : '#dc262622', border: `1px solid ${outperforming ? '#2D6A4F44' : '#dc262644'}` }}
             >
               <span className={outperforming ? 'text-green-400' : 'text-red-400'}>
                 {outperforming ? '▲' : '▼'} {Math.abs(diff * 100).toFixed(2)}%
