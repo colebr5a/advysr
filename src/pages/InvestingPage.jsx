@@ -1,4 +1,4 @@
-
+import { useState, useRef, useEffect } from 'react';
 import { Card } from '../components/ui/Card.jsx';
 import { fmt } from '../utils/formatters.js';
 import { monthlySurplus, totalExpenses } from '../utils/calculations.js';
@@ -34,6 +34,7 @@ function ResearchPanel({ profile, surplus }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           question,
+          history: messages,
           context: {
             riskTolerance: profile.riskTolerance,
             monthlyIncome: profile.monthlyIncome,
