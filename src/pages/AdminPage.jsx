@@ -22,7 +22,7 @@ function fmtRelative(iso) {
   return fmtDate(iso)
 }
 
-function StatCard({ label, value, color = 'text-white', sub }) {
+function StatCard({ label, value, color = 'text-primary-700', sub }) {
   return (
     <Card className="!p-5">
       <p className="text-xs font-medium text-gray-500 mb-1">{label}</p>
@@ -48,8 +48,8 @@ function UserDetail({ row, onBack }) {
 
       <div className="flex items-start justify-between">
         <div>
-          <h2 className="text-xl font-bold text-white">{row.email}</h2>
-          <p className="text-gray-400 text-sm mt-0.5">
+          <h2 className="text-xl font-bold text-gray-900">{row.email}</h2>
+          <p className="text-gray-500 text-sm mt-0.5">
             Joined {fmtDate(row.created_at)} · Last seen {fmtRelative(row.last_seen)}
           </p>
         </div>
@@ -70,19 +70,19 @@ function UserDetail({ row, onBack }) {
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <StatCard label="Total Assets" value={fmt(totalAssets)} />
-        <StatCard label="Total Debt"   value={fmt(totalDebt)} color={totalDebt > 0 ? 'text-red-500' : 'text-white'} />
-        <StatCard label="Net Worth"    value={fmt(netWorth)}   color={netWorth < 0 ? 'text-red-500' : 'text-white'} />
+        <StatCard label="Total Debt"   value={fmt(totalDebt)}  color={totalDebt > 0 ? 'text-red-500' : 'text-primary-700'} />
+        <StatCard label="Net Worth"    value={fmt(netWorth)}   color={netWorth < 0 ? 'text-red-500' : 'text-primary-700'} />
         <StatCard label="Goals"        value={(p.goals || []).length} />
       </div>
 
       {(p.accounts || []).length > 0 && (
         <div>
-          <h3 className="text-base font-semibold text-white mb-3">Accounts</h3>
+          <h3 className="text-base font-semibold text-gray-900 mb-3">Accounts</h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {p.accounts.map(a => (
               <Card key={a.id} className="!p-4">
                 <p className="text-xs text-gray-500 truncate mb-1">{a.label}</p>
-                <p className="font-bold text-white">{fmt(a.balance || 0)}</p>
+                <p className="font-bold text-primary-700">{fmt(a.balance || 0)}</p>
               </Card>
             ))}
           </div>
@@ -91,25 +91,25 @@ function UserDetail({ row, onBack }) {
 
       {(p.goals || []).length > 0 && (
         <div>
-          <h3 className="text-base font-semibold text-white mb-3">Goals</h3>
+          <h3 className="text-base font-semibold text-gray-900 mb-3">Goals</h3>
           <div className="space-y-2">
             {p.goals.map(g => {
               const saved = (g.contributions || []).reduce((s, c) => s + c.amount, 0)
               const pct = g.targetAmount > 0 ? Math.min(100, Math.round(saved / g.targetAmount * 100)) : 0
               return (
-                <div key={g.id} className="flex items-center gap-4 p-3 rounded-xl" style={{ background: '#383838' }}>
+                <div key={g.id} className="flex items-center gap-4 p-3 rounded-xl" style={{ background: '#f0fdf4', border: '1px solid #B7E4C7' }}>
                   <span className="text-lg">{g.icon || '🎯'}</span>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-100 text-sm truncate">{g.label}</p>
+                    <p className="font-medium text-gray-900 text-sm truncate">{g.label}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <div className="flex-1 bg-gray-200 rounded-full h-1.5">
                         <div className="h-1.5 rounded-full bg-primary-500" style={{ width: `${pct}%` }} />
                       </div>
-                      <span className="text-xs text-gray-400 whitespace-nowrap">{pct}%</span>
+                      <span className="text-xs text-gray-500 whitespace-nowrap">{pct}%</span>
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <p className="text-sm font-semibold text-white">{fmt(saved)}</p>
+                    <p className="text-sm font-semibold text-primary-700">{fmt(saved)}</p>
                     <p className="text-xs text-gray-400">of {fmt(g.targetAmount)}</p>
                   </div>
                 </div>
@@ -164,7 +164,6 @@ export function AdminPage() {
     !search || r.email?.toLowerCase().includes(search.toLowerCase())
   )
 
-  // Active in last 7 days
   const recentlyActive = rows.filter(r => {
     if (!r.last_seen) return false
     return Date.now() - new Date(r.last_seen).getTime() < 7 * 24 * 60 * 60 * 1000
@@ -173,15 +172,15 @@ export function AdminPage() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-8 space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
         <p className="text-gray-500 text-sm mt-1">All registered users</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <StatCard label="Total Users"      value={rows.length} />
-        <StatCard label="Onboarded"        value={onboarded.length} color="text-green-600" sub={`${Math.round(onboarded.length / Math.max(rows.length, 1) * 100)}% of users`} />
+        <StatCard label="Onboarded"        value={onboarded.length}    color="text-green-600" sub={`${Math.round(onboarded.length / Math.max(rows.length, 1) * 100)}% of users`} />
         <StatCard label="Not Onboarded"    value={notOnboarded.length} color="text-amber-500" />
-        <StatCard label="Active (7 days)"  value={recentlyActive} color="text-primary-600" />
+        <StatCard label="Active (7 days)"  value={recentlyActive}      color="text-primary-600" />
       </div>
 
       <div>
@@ -190,15 +189,15 @@ export function AdminPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search by email..."
-            className="flex-1 max-w-sm px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-400 text-sm text-white"
-            style={{ background: '#2c2c2c', border: '1px solid #3a3a3a' }}
+            className="flex-1 max-w-sm px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-400 text-sm text-gray-900"
+            style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}
           />
-          <span className="text-sm text-gray-400">{filtered.length} users</span>
+          <span className="text-sm text-gray-500">{filtered.length} users</span>
         </div>
 
         <Card className="!p-0 overflow-hidden">
           <table className="w-full text-sm">
-            <thead style={{ background: '#383838', borderBottom: '1px solid #3a3a3a' }}>
+            <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
               <tr>
                 <th className="text-left px-6 py-3 font-medium text-gray-500">Email</th>
                 <th className="text-left px-6 py-3 font-medium text-gray-500">Joined</th>
@@ -207,15 +206,21 @@ export function AdminPage() {
                 <th className="px-6 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody>
               {filtered.length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-6 py-8 text-center text-gray-400">No users found</td>
                 </tr>
               )}
               {filtered.map(row => (
-                <tr key={row.id} className="transition-colors" style={{ borderTop: '1px solid #3a3a3a' }} onMouseEnter={e => e.currentTarget.style.background='#383838'} onMouseLeave={e => e.currentTarget.style.background=''}>
-                  <td className="px-6 py-4 font-medium text-white">{row.email}</td>
+                <tr
+                  key={row.id}
+                  className="transition-colors"
+                  style={{ borderTop: '1px solid #e2e8f0' }}
+                  onMouseEnter={e => e.currentTarget.style.background = '#f0fdf4'}
+                  onMouseLeave={e => e.currentTarget.style.background = ''}
+                >
+                  <td className="px-6 py-4 font-medium text-primary-700">{row.email}</td>
                   <td className="px-6 py-4 text-gray-500">{fmtDate(row.created_at)}</td>
                   <td className="px-6 py-4 text-gray-500">{fmtRelative(row.last_seen)}</td>
                   <td className="px-6 py-4">
