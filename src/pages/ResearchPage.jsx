@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Card } from '../components/ui/Card.jsx';
 import { monthlySurplus } from '../utils/calculations.js';
+import { API_BASE } from '../utils/api.js';
 
 const SUGGESTED_QUESTIONS = [
   'What are the risks of QQQ vs VOO?',
@@ -30,7 +31,7 @@ export function ResearchPage({ profile }) {
     setInput('');
     setLoading(true);
     try {
-      const res = await fetch('/api/research', {
+      const res = await fetch(`${API_BASE}/api/research`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

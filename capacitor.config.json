@@ -1,0 +1,13 @@
+{
+  "appId": "org.advysr.app",
+  "appName": "advysr",
+  "webDir": "dist",
+  "ios": {
+    "contentInset": "automatic"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}

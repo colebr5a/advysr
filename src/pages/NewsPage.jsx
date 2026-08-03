@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { API_BASE } from '../utils/api.js';
 
 // ─── Market Heatmap ───────────────────────────────────────────────────────────
 
@@ -189,7 +190,7 @@ export function NewsPage({ profile }) {
     const params = new URLSearchParams({ category });
     if (debouncedQuery.trim()) params.set('q', debouncedQuery.trim());
 
-    fetch(`/api/news?${params}`)
+    fetch(`${API_BASE}/api/news?${params}`)
       .then(r => r.json())
       .then(data => {
         if (data.error) throw new Error(data.error);

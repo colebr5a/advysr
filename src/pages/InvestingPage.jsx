@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Card } from '../components/ui/Card.jsx';
+import { API_BASE } from '../utils/api.js';
 import { fmt } from '../utils/formatters.js';
 import { monthlySurplus, totalExpenses } from '../utils/calculations.js';
 import { runAdviceEngine } from '../engine/adviceEngine.js';
@@ -29,7 +30,7 @@ function ResearchPanel({ profile, surplus }) {
     setInput('');
     setLoading(true);
     try {
-      const res = await fetch('/api/research', {
+      const res = await fetch(`${API_BASE}/api/research`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

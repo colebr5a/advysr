@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Card } from '../components/ui/Card.jsx';
+import { API_BASE } from '../utils/api.js';
 import { CsvImportModal } from '../components/portfolio/CsvImportModal.jsx';
 import { ASSET_CLASSES, TARGET_ALLOCATIONS, getAssetClass } from '../utils/tickerClassifier.js';
 import { fmt } from '../utils/formatters.js';
@@ -354,7 +355,7 @@ function useSP500YTD(enabled) {
   useEffect(() => {
     if (!enabled) return;
     setLoading(true);
-    fetch('/api/sp500')
+    fetch(`${API_BASE}/api/sp500`)
       .then(r => r.json())
       .then(d => { if (!d.error) setData(d); })
       .catch(() => {})
