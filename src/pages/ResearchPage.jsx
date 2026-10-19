@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { Card } from '../components/ui/Card.jsx';
 import { monthlySurplus } from '../utils/calculations.js';
 import { API_BASE } from '../utils/api.js';
+import { FREE_LIMITS, getAiQueriesUsed } from '../lib/premiumService.js';
+import { Disclaimer } from '../components/ui/Disclaimer.jsx';
 
-const SUGGESTED_QUESTIONS = [
+const SUGGESTED = [
   'What are the risks of QQQ vs VOO?',
   'Should I prioritize paying debt or investing?',
   'Explain dollar-cost averaging',
@@ -14,12 +15,17 @@ const SUGGESTED_QUESTIONS = [
   'What are index funds and why are they popular?',
 ];
 
-export function ResearchPage({ profile }) {
+export function ResearchPage({ profile, isPremium, onShowUpgrade, recordAiQuery }) {
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const bottomRef = useRef(null);
-  const surplus = Math.max(0, monthlySurplus(profile));
+  const [input, setInput]       = useState('');
+  const [loading, setLoading]   = useState(false);
+  const bottomRef               = useRef(null);
+  const inputRef                = useRef(null);
+  const surplus                 = Math.max(0, monthlySurplus(profile));
+
+  const queriesUsed  = getAiQueriesUsed(profile);
+  const queriesLeft  = Math.max(0, FREE_LIMITS.aiQueriesPerMonth - queriesUsed);
+  const atLimit      = !isPremium && queriesUsed >= FREE_LIMITS.aiQueriesPerMonth;
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -27,6 +33,8 @@ export function ResearchPage({ profile }) {
 
   async function ask(question) {
     if (!question.trim() || loading) return;
+    if (atLimit) { onShowUpgrade('ai'); return; }
+
     setMessages(m => [...m, { role: 'user', text: question }]);
     setInput('');
     setLoading(true);
@@ -43,10 +51,12 @@ export function ResearchPage({ profile }) {
             accounts: profile.accounts || [],
             goals: profile.goals || [],
           },
+          history: messages.slice(-6).map(m => ({ role: m.role, content: m.text })),
         }),
       });
       const data = await res.json();
       setMessages(m => [...m, { role: 'assistant', text: data.answer || data.error || 'No response.' }]);
+      if (!isPremium) recordAiQuery?.();
     } catch {
       setMessages(m => [...m, { role: 'assistant', text: 'Error reaching research assistant. Try again.' }]);
     } finally {
@@ -55,106 +65,176 @@ export function ResearchPage({ profile }) {
   }
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+    <main className="flex flex-col px-4 pt-2 max-w-2xl mx-auto" style={{ height: 'calc(100dvh - 52px - 64px - env(safe-area-inset-bottom, 0px))' }}>
+
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-2xl bg-primary-600 flex items-center justify-center text-white font-bold text-lg">A</div>
+      <div className="flex items-center gap-3 mb-4 flex-shrink-0">
+        <div
+          className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{ background: '#1B4332' }}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="#FFFFFF" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+          </svg>
+        </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Investment Research</h1>
-          <p className="text-gray-500 text-sm">Powered by Claude — personalized to your profile</p>
+          <p className="font-semibold" style={{ color: '#111827' }}>Investment Research</p>
+          <p className="text-xs" style={{ color: '#9CA3AF' }}>Powered by Claude · personalized to you</p>
         </div>
       </div>
 
-      {/* Profile context pill */}
-      <div className="flex flex-wrap gap-2">
-        <span className="text-xs px-3 py-1 rounded-full border border-gray-200 text-gray-600">
-          Risk: <span className="text-gray-900 capitalize">{profile.riskTolerance || 'not set'}</span>
-        </span>
-        <span className="text-xs px-3 py-1 rounded-full border border-gray-200 text-gray-600">
-          Surplus: <span className="text-gray-900">${surplus}/mo</span>
-        </span>
-        <span className="text-xs px-3 py-1 rounded-full border border-gray-200 text-gray-600">
-          Accounts: <span className="text-gray-900">{(profile.accounts || []).length}</span>
-        </span>
-      </div>
-
-      {/* Chat area */}
-      <Card className="flex flex-col" style={{ minHeight: '480px' }}>
-        {/* Messages */}
-        <div className="flex-1 space-y-4 mb-4 overflow-y-auto pr-1" style={{ maxHeight: '400px' }}>
-          {messages.length === 0 && (
-            <div className="py-6">
-              <p className="text-gray-500 text-sm mb-4 text-center">Suggested questions</p>
-              <div className="flex flex-wrap gap-2 justify-center">
-                {SUGGESTED_QUESTIONS.map(q => (
-                  <button
-                    key={q}
-                    onClick={() => ask(q)}
-                    className="text-xs px-3 py-1.5 rounded-full border border-gray-200 text-gray-600 hover:border-primary-600 hover:text-primary-400 transition-colors text-left"
-                  >
-                    {q}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {messages.map((m, i) => (
-            <div key={i} className={`flex gap-3 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              {m.role === 'assistant' && (
-                <div className="w-7 h-7 rounded-lg bg-primary-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5">A</div>
-              )}
-              <div
-                className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
-                  m.role === 'user'
-                    ? 'bg-primary-600 text-white rounded-tr-sm'
-                    : 'text-gray-700 rounded-tl-sm'
-                }`}
-                style={m.role === 'assistant' ? { background: '#f1f5f9' } : {}}
-              >
-                {m.text}
-              </div>
-            </div>
-          ))}
-
-          {loading && (
-            <div className="flex gap-3">
-              <div className="w-7 h-7 rounded-lg bg-primary-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">A</div>
-              <div className="px-4 py-3 rounded-2xl rounded-tl-sm text-sm text-gray-400 flex items-center gap-1" style={{ background: '#f1f5f9' }}>
-                <span className="animate-pulse">●</span>
-                <span className="animate-pulse" style={{ animationDelay: '0.2s' }}>●</span>
-                <span className="animate-pulse" style={{ animationDelay: '0.4s' }}>●</span>
-              </div>
-            </div>
-          )}
-          <div ref={bottomRef} />
-        </div>
-
-        {/* Input */}
-        <div className="flex gap-2 border-t border-gray-200 pt-4">
-          <input
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && !e.shiftKey && ask(input)}
-            placeholder="Ask about a stock, ETF, strategy, or concept..."
-            className="flex-1 px-4 py-3 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-            style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}
-            disabled={loading}
-            autoFocus
-          />
+      {/* Usage indicator (free only) */}
+      {!isPremium && (
+        <div
+          className="flex items-center justify-between px-3 py-2 rounded-xl mb-3 flex-shrink-0"
+          style={{ background: atLimit ? '#FEF2F2' : '#F9F8F6', border: `1px solid ${atLimit ? '#FECACA' : '#E6E9E6'}` }}
+        >
+          <p className="text-xs" style={{ color: atLimit ? '#DC2626' : '#6B7280' }}>
+            {atLimit ? 'Monthly AI limit reached' : `${queriesLeft} of ${FREE_LIMITS.aiQueriesPerMonth} AI queries left this month`}
+          </p>
           <button
-            onClick={() => ask(input)}
-            disabled={!input.trim() || loading}
-            className="px-5 py-3 bg-primary-600 text-white rounded-xl font-medium text-sm hover:bg-primary-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            onClick={() => onShowUpgrade('ai')}
+            className="text-xs font-semibold press-effect"
+            style={{ color: '#1B4332' }}
           >
-            Ask
+            Upgrade →
           </button>
         </div>
-      </Card>
+      )}
 
-      <p className="text-xs text-gray-500 text-center pb-4">
-        Educational guidance only — not financial advice. Consult a licensed financial advisor before investing.
-      </p>
+      {/* Context pills */}
+      <div className="flex flex-wrap gap-2 mb-4 flex-shrink-0">
+        <span
+          className="text-xs px-2.5 py-1 rounded-full"
+          style={{ background: '#F0FAF4', border: '1px solid #B7E4C7', color: '#2D6A4F' }}
+        >
+          {profile.riskTolerance ? `${profile.riskTolerance} risk` : 'Risk: not set'}
+        </span>
+        <span
+          className="text-xs px-2.5 py-1 rounded-full"
+          style={{ background: '#F0FAF4', border: '1px solid #B7E4C7', color: '#2D6A4F' }}
+        >
+          ${surplus}/mo surplus
+        </span>
+        <span
+          className="text-xs px-2.5 py-1 rounded-full"
+          style={{ background: '#F0FAF4', border: '1px solid #B7E4C7', color: '#2D6A4F' }}
+        >
+          {(profile.accounts || []).length} accounts
+        </span>
+      </div>
+
+      {/* Messages area */}
+      <div className="flex-1 overflow-y-auto no-scrollbar" style={{ minHeight: 0 }}>
+        {messages.length === 0 ? (
+          <div className="h-full flex flex-col justify-end pb-4">
+            <p className="text-xs text-center mb-3" style={{ color: '#9CA3AF' }}>Suggested questions</p>
+            <div className="flex flex-wrap gap-2 justify-center">
+              {SUGGESTED.map(q => (
+                <button
+                  key={q}
+                  onClick={() => ask(q)}
+                  className="text-xs px-3 py-1.5 rounded-full press-effect text-left"
+                  style={{
+                    background: '#FFFFFF',
+                    border: '1px solid #E6E9E6',
+                    color: '#374151',
+                  }}
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4 py-2">
+            {messages.map((m, i) => (
+              <div key={i} className={`flex gap-2.5 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                {m.role === 'assistant' && (
+                  <div
+                    className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+                    style={{ background: '#1B4332' }}
+                  >
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="#FFFFFF" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                    </svg>
+                  </div>
+                )}
+                <div
+                  className="max-w-[82%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap"
+                  style={m.role === 'user' ? {
+                    background: '#1B4332',
+                    color: '#FFFFFF',
+                    borderBottomRightRadius: '6px',
+                  } : {
+                    background: '#FFFFFF',
+                    border: '1px solid #E6E9E6',
+                    color: '#374151',
+                    borderBottomLeftRadius: '6px',
+                  }}
+                >
+                  {m.text}
+                </div>
+              </div>
+            ))}
+
+            {loading && (
+              <div className="flex gap-2.5">
+                <div
+                  className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ background: '#1B4332' }}
+                >
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="#FFFFFF" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                  </svg>
+                </div>
+                <div
+                  className="px-3.5 py-3 rounded-2xl flex items-center gap-1"
+                  style={{ background: '#FFFFFF', border: '1px solid #E6E9E6', borderBottomLeftRadius: '6px' }}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full dot-1" style={{ background: '#9CA3AF' }} />
+                  <span className="w-1.5 h-1.5 rounded-full dot-2" style={{ background: '#9CA3AF' }} />
+                  <span className="w-1.5 h-1.5 rounded-full dot-3" style={{ background: '#9CA3AF' }} />
+                </div>
+              </div>
+            )}
+            <div ref={bottomRef} />
+          </div>
+        )}
+      </div>
+
+      {/* Input bar */}
+      <div
+        className="flex-shrink-0 flex gap-2 pt-3 pb-2"
+        style={{ borderTop: '1px solid #E6E9E6' }}
+      >
+        <input
+          ref={inputRef}
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && !e.shiftKey && ask(input)}
+          placeholder="Ask about a stock, ETF, strategy…"
+          disabled={loading}
+          className="flex-1 px-4 py-3 rounded-2xl text-sm"
+          style={{
+            background: '#FFFFFF',
+            border: '1.5px solid #E6E9E6',
+            color: '#111827',
+          }}
+        />
+        <button
+          onClick={() => ask(input)}
+          disabled={!input.trim() || loading}
+          className="px-4 py-3 rounded-2xl font-medium text-sm press-effect disabled:opacity-40"
+          style={{ background: '#1B4332', color: '#FFFFFF' }}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+          </svg>
+        </button>
+      </div>
+
+      <Disclaimer />
     </main>
   );
 }

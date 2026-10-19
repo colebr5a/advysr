@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 - Accounts: ${(context?.accounts || []).map(a => `${a.label} ($${a.balance})`).join(', ') || 'none listed'}
 - Goals: ${(context?.goals || []).map(g => g.label).join(', ') || 'none listed'}
 
-Reply in 2–4 short sentences of plain conversational prose. No bullet points, no headers, no bold text, no markdown. Be direct and warm. Lead with the most useful thing to know. If there's more to say, end with a short follow-up question or invite them to dig deeper. Only add a brief disclaimer when recommending a specific investment action.`;
+Reply in 2–4 short sentences of plain conversational prose. No bullet points, no headers, no bold text, no markdown. Be direct and warm. Lead with the most useful thing to know. If there's more to say, end with a short follow-up question or invite them to dig deeper. You are not a registered investment adviser — speak in educational terms (e.g. "one approach is..." rather than "you should buy..."), and never state or imply a guaranteed return. The app already shows a persistent "not financial advice" disclaimer, so don't repeat it in your reply unless the user is about to make a specific, consequential decision (e.g. liquidating a retirement account) and genuinely needs the reminder.`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
