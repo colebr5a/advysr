@@ -87,8 +87,8 @@ export function StepPin({ value, onChange, onNext, onBack }) {
       onNext={handleNext}
       onBack={onBack}
       canNext={value.length === 4 && confirm.length === 4}
-      step={9}
-      total={10}
+      step={11}
+      total={11}
     >
       <div className="space-y-5">
         {/* PIN entry */}

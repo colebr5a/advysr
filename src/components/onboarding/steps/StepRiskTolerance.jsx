@@ -21,7 +21,7 @@ const OPTIONS = [
 
 export function StepRiskTolerance({ value, onChange, onNext, onBack }) {
   return (
-    <StepWrapper title="Risk tolerance?" subtitle="How would you feel if your investments dropped 30% in a year?" onNext={onNext} onBack={onBack} canNext={!!value} step={8} total={9}>
+    <StepWrapper title="Risk tolerance?" subtitle="How would you feel if your investments dropped 30% in a year?" onNext={onNext} onBack={onBack} canNext={!!value} step={9} total={11}>
       <div className="space-y-2.5">
         {OPTIONS.map(opt => {
           const active = value === opt.value;

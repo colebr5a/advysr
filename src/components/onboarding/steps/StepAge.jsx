@@ -2,7 +2,7 @@ import { StepWrapper } from '../shared/StepWrapper.jsx';
 
 export function StepAge({ value, onChange, onNext, onBack }) {
   return (
-    <StepWrapper title="How old are you?" subtitle="This helps tailor your investment horizon." onNext={onNext} onBack={onBack} canNext={value >= 18 && value <= 100} step={1} total={9}>
+    <StepWrapper title="How old are you?" subtitle="This helps tailor your investment horizon." onNext={onNext} onBack={onBack} canNext={value >= 18 && value <= 100} step={1} total={11}>
       <input
         type="number"
         min="18"

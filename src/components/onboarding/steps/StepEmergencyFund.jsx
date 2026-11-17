@@ -5,7 +5,7 @@ import { fmt } from '../../../utils/formatters.js';
 export function StepEmergencyFund({ value, onChange, onNext, onBack, profile }) {
   const expenses = (profile?.fixedExpenses?.total || 0) + (profile?.variableExpenses?.total || 0);
   return (
-    <StepWrapper title="Emergency fund balance?" subtitle="Money set aside specifically for emergencies, separate from regular savings." onNext={onNext} onBack={onBack} canNext={value >= 0} step={7} total={9}>
+    <StepWrapper title="Emergency fund balance?" subtitle="Money set aside specifically for emergencies, separate from regular savings." onNext={onNext} onBack={onBack} canNext={value >= 0} step={8} total={11}>
       <CurrencyInput value={value} onChange={onChange} placeholder="e.g. 3000" />
       {expenses > 0 && (
         <div className="grid grid-cols-2 gap-2.5 mt-1">

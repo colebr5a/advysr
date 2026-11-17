@@ -3,6 +3,7 @@ import { CircularProgress } from '../components/ui/CircularProgress.jsx';
 import { fmt } from '../utils/formatters.js';
 import { totalExpenses, monthlySurplus } from '../utils/calculations.js';
 import { runAdviceEngine } from '../engine/adviceEngine.js';
+import { PlanExplainer } from '../components/plan/PlanExplainer.jsx';
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const MONTHS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -548,6 +549,8 @@ export function HomePage({ profile, onProfileUpdate, onNavigate }) {
           </div>
         )}
       </div>
+
+      <PlanExplainer result={result} profile={profile} onProfileUpdate={onProfileUpdate} />
     </main>
   );
 }

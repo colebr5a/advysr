@@ -24,7 +24,7 @@ const inputStyle = {
 
 export function StepDebts({ value = [], onChange, onNext, onBack }) {
   return (
-    <StepWrapper title="Any debts?" subtitle="Enter each debt. Leave blank if you have none." onNext={onNext} onBack={onBack} canNext={true} step={6} total={9}>
+    <StepWrapper title="Any debts?" subtitle="Enter each debt. Leave blank if you have none." onNext={onNext} onBack={onBack} canNext={true} step={7} total={11}>
       <div className="space-y-3">
         {value.map((debt, i) => (
           <div key={debt.id} className="rounded-2xl p-4 space-y-3" style={{ background: '#F9F8F6', border: '1px solid #E6E9E6' }}>

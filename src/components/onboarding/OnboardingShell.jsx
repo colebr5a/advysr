@@ -9,6 +9,7 @@ import { StepEmergencyFund } from './steps/StepEmergencyFund.jsx';
 import { StepRiskTolerance } from './steps/StepRiskTolerance.jsx';
 import { StepGoals } from './steps/StepGoals.jsx';
 import { StepPin } from './steps/StepPin.jsx';
+import { StepTaxes } from './steps/StepTaxes.jsx';
 
 const DEFAULT_DRAFT = {
   age: 0,
@@ -31,17 +32,21 @@ export function OnboardingShell({ onComplete, initialDraft }) {
     return (val) => setDraft(d => ({ ...d, [key]: val }));
   }
 
+  const taxValue = { taxes: draft.taxes, retirement401k: draft.retirement401k };
+  const setTaxValue = v => setDraft(d => ({ ...d, taxes: v.taxes, retirement401k: v.retirement401k }));
+
   const steps = [
     <StepAge value={draft.age} onChange={update('age')} onNext={() => setStep(1)} />,
     <StepIncome value={draft.monthlyIncome} onChange={update('monthlyIncome')} onNext={() => setStep(2)} onBack={() => setStep(0)} />,
-    <StepFixedExpenses value={draft.fixedExpenses} onChange={update('fixedExpenses')} onNext={() => setStep(3)} onBack={() => setStep(1)} />,
-    <StepVariableExpenses value={draft.variableExpenses} onChange={update('variableExpenses')} onNext={() => setStep(4)} onBack={() => setStep(2)} />,
-    <StepSavings value={draft.currentSavings} onChange={update('currentSavings')} onNext={() => setStep(5)} onBack={() => setStep(3)} />,
-    <StepDebts value={draft.debts} onChange={update('debts')} onNext={() => setStep(6)} onBack={() => setStep(4)} />,
-    <StepEmergencyFund value={draft.emergencyFundBalance} onChange={update('emergencyFundBalance')} onNext={() => setStep(7)} onBack={() => setStep(5)} profile={draft} />,
-    <StepRiskTolerance value={draft.riskTolerance} onChange={update('riskTolerance')} onNext={() => setStep(8)} onBack={() => setStep(6)} />,
-    <StepGoals value={draft.goals} onChange={update('goals')} onNext={() => setStep(9)} onBack={() => setStep(7)} />,
-    <StepPin value={draft.pin} onChange={update('pin')} onNext={() => onComplete(draft)} onBack={() => setStep(8)} />,
+    <StepTaxes value={taxValue} onChange={setTaxValue} onNext={() => setStep(3)} onBack={() => setStep(1)} />,
+    <StepFixedExpenses value={draft.fixedExpenses} onChange={update('fixedExpenses')} onNext={() => setStep(4)} onBack={() => setStep(2)} />,
+    <StepVariableExpenses value={draft.variableExpenses} onChange={update('variableExpenses')} onNext={() => setStep(5)} onBack={() => setStep(3)} />,
+    <StepSavings value={draft.currentSavings} onChange={update('currentSavings')} onNext={() => setStep(6)} onBack={() => setStep(4)} />,
+    <StepDebts value={draft.debts} onChange={update('debts')} onNext={() => setStep(7)} onBack={() => setStep(5)} />,
+    <StepEmergencyFund value={draft.emergencyFundBalance} onChange={update('emergencyFundBalance')} onNext={() => setStep(8)} onBack={() => setStep(6)} profile={draft} />,
+    <StepRiskTolerance value={draft.riskTolerance} onChange={update('riskTolerance')} onNext={() => setStep(9)} onBack={() => setStep(7)} />,
+    <StepGoals value={draft.goals} onChange={update('goals')} onNext={() => setStep(10)} onBack={() => setStep(8)} />,
+    <StepPin value={draft.pin} onChange={update('pin')} onNext={() => onComplete(draft)} onBack={() => setStep(9)} />,
   ];
 
   return steps[step];

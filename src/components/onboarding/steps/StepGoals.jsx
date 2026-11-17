@@ -29,7 +29,7 @@ const inputStyle = {
 
 export function StepGoals({ value = [], onChange, onNext, onBack }) {
   return (
-    <StepWrapper title="Financial goals?" subtitle="What are you saving toward? Add as many as you like." onNext={onNext} onBack={onBack} canNext={true} nextLabel="Finish" step={9} total={9}>
+    <StepWrapper title="Financial goals?" subtitle="What are you saving toward? Add as many as you like." onNext={onNext} onBack={onBack} canNext={true} step={10} total={11}>
       <div className="space-y-3 max-h-72 overflow-y-auto pr-0.5 no-scrollbar">
         {value.map((goal, i) => (
           <div key={goal.id} className="rounded-2xl p-4 space-y-3" style={{ background: '#F9F8F6', border: '1px solid #E6E9E6' }}>
