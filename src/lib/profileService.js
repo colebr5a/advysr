@@ -1,4 +1,24 @@
 import { supabase } from './supabase.js'
+import { currentUsageMonth } from './usage.js'
+
+// The PIN is never stored in profile_data — only a non-secret `hasPin` flag.
+// This also strips plaintext PINs from legacy profiles before they're re-saved.
+export function sanitizeProfile(profileData) {
+  if (!profileData) return profileData
+  const { pin, ...rest } = profileData
+  return pin ? { ...rest, hasPin: true } : rest
+}
+
+export async function fetchAiUsage(userId) {
+  const { data, error } = await supabase
+    .from('ai_usage')
+    .select('queries')
+    .eq('user_id', userId)
+    .eq('month', currentUsageMonth())
+    .maybeSingle()
+  if (error) return 0
+  return data?.queries ?? 0
+}
 
 export async function fetchProfile(userId) {
   const { data, error } = await supabase
@@ -7,14 +27,16 @@ export async function fetchProfile(userId) {
     .eq('id', userId)
     .single()
   if (error && error.code !== 'PGRST116') throw error
-  return data?.profile_data ?? null
+  return {
+    profileData: data?.profile_data ?? null,
+  }
 }
 
 export async function saveProfile(userId, email, profileData) {
   const { error } = await supabase.from('profiles').upsert({
     id: userId,
     email,
-    profile_data: profileData,
+    profile_data: sanitizeProfile(profileData),
     updated_at: new Date().toISOString(),
     last_seen: new Date().toISOString(),
   }, { onConflict: 'id' })

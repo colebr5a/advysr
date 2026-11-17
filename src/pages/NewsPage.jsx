@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { API_BASE } from '../utils/api.js';
 
-// ─── Market Heatmap ───────────────────────────────────────────────────────────
-
 function MarketHeatmap() {
   const containerRef = useRef(null);
 
@@ -21,40 +19,24 @@ function MarketHeatmap() {
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js';
     script.async = true;
     script.textContent = JSON.stringify({
-      exchanges: [],
-      dataSource: 'SPX500',
-      grouping: 'sector',
-      blockSize: 'market_cap_basic',
-      blockColor: 'change',
-      locale: 'en',
-      colorTheme: 'dark',
-      hasTopBar: false,
-      isDataSetEnabled: false,
-      isZoomEnabled: true,
-      hasSymbolTooltip: true,
-      isMonoSize: false,
-      width: '100%',
-      height: 325,
+      exchanges: [], dataSource: 'SPX500', grouping: 'sector',
+      blockSize: 'market_cap_basic', blockColor: 'change',
+      locale: 'en', colorTheme: 'dark', hasTopBar: false,
+      isDataSetEnabled: false, isZoomEnabled: true,
+      hasSymbolTooltip: true, isMonoSize: false,
+      width: '100%', height: 300,
     });
     container.appendChild(script);
-
     return () => { container.innerHTML = ''; };
   }, []);
 
   return (
-    <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #e2e8f0' }}>
-      <div className="px-4 pt-4 pb-3 flex items-center justify-between" style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0' }}>
-        <div>
-          <h2 className="text-base font-bold text-gray-900">Market Heatmap</h2>
-          <p className="text-xs text-gray-500 mt-0.5">S&P 500 · Sized by market cap · Colored by daily change</p>
-        </div>
-        <span className="text-xs text-gray-600">Powered by TradingView</span>
+    <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E6E9E6' }}>
+      <div className="px-4 py-3" style={{ background: '#FFFFFF', borderBottom: '1px solid #E6E9E6' }}>
+        <p className="font-semibold text-sm" style={{ color: '#111827' }}>Market Heatmap</p>
+        <p className="text-xs mt-0.5" style={{ color: '#9CA3AF' }}>S&P 500 · Market cap size · Daily change color</p>
       </div>
-      <div
-        ref={containerRef}
-        className="tradingview-widget-container w-full"
-        style={{ height: '325px', background: '#f8fafc' }}
-      />
+      <div ref={containerRef} className="tradingview-widget-container w-full" style={{ height: '300px', background: '#111827' }} />
     </div>
   );
 }
@@ -69,29 +51,11 @@ const CATEGORIES = [
 function timeAgo(dateStr) {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 60) return `${mins}m`;
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  return `${Math.floor(hrs / 24)}d ago`;
+  if (hrs < 24) return `${hrs}h`;
+  return `${Math.floor(hrs / 24)}d`;
 }
-
-// ─── Skeleton card ────────────────────────────────────────────────────────────
-
-function SkeletonCard() {
-  return (
-    <div className="rounded-2xl overflow-hidden animate-pulse" style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>
-      <div className="h-44 w-full" style={{ background: '#f1f5f9' }} />
-      <div className="p-4 space-y-2.5">
-        <div className="h-3 rounded w-1/3" style={{ background: '#f1f5f9' }} />
-        <div className="h-4 rounded w-full" style={{ background: '#e2e8f0' }} />
-        <div className="h-4 rounded w-5/6" style={{ background: '#e2e8f0' }} />
-        <div className="h-3 rounded w-2/3" style={{ background: '#f1f5f9' }} />
-      </div>
-    </div>
-  );
-}
-
-// ─── Ticker relevance matching ────────────────────────────────────────────────
 
 function matchTickers(article, tickers) {
   if (!tickers.length) return [];
@@ -99,63 +63,70 @@ function matchTickers(article, tickers) {
   return tickers.filter(t => new RegExp(`\\b${t}\\b`, 'i').test(haystack));
 }
 
-// ─── News card ────────────────────────────────────────────────────────────────
+function SkeletonCard() {
+  return (
+    <div className="rounded-2xl overflow-hidden animate-pulse" style={{ background: '#FFFFFF', border: '1px solid #E6E9E6' }}>
+      <div className="h-40 w-full" style={{ background: '#F3F4F3' }} />
+      <div className="p-4 space-y-2">
+        <div className="h-2.5 rounded-full w-1/3" style={{ background: '#F3F4F3' }} />
+        <div className="h-3.5 rounded-full w-full" style={{ background: '#E6E9E6' }} />
+        <div className="h-3.5 rounded-full w-5/6" style={{ background: '#E6E9E6' }} />
+        <div className="h-2.5 rounded-full w-2/3" style={{ background: '#F3F4F3' }} />
+      </div>
+    </div>
+  );
+}
 
 function NewsCard({ article, heldTickers = [] }) {
   const [imgError, setImgError] = useState(false);
   const hasImage = article.urlToImage && !imgError;
-  const matched = matchTickers(article, heldTickers);
+  const matched  = matchTickers(article, heldTickers);
 
   return (
     <a
       href={article.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex flex-col rounded-2xl overflow-hidden transition-all duration-200 hover:scale-[1.015] hover:shadow-xl group"
+      className="flex flex-col rounded-2xl overflow-hidden press-effect"
       style={{
-        background: '#ffffff',
-        border: matched.length ? '1px solid #95D5B2' : '1px solid #e2e8f0',
+        background: '#FFFFFF',
+        border: matched.length ? '1.5px solid #52B788' : '1px solid #E6E9E6',
       }}
     >
-      {/* Image */}
-      <div className="h-44 w-full flex-shrink-0 overflow-hidden relative" style={{ background: '#f1f5f9' }}>
+      <div className="h-40 w-full flex-shrink-0 overflow-hidden" style={{ background: '#F9F8F6' }}>
         {hasImage ? (
-          <img
-            src={article.urlToImage}
-            alt=""
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            onError={() => setImgError(true)}
-          />
+          <img src={article.urlToImage} alt="" className="w-full h-full object-cover" onError={() => setImgError(true)} />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <svg className="w-10 h-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 12h6" />
+            <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="#C4CDC7">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5" />
             </svg>
           </div>
         )}
         {matched.length > 0 && (
-          <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold text-green-700" style={{ background: '#D8F3DC', border: '1px solid #95D5B2' }}>
-            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-            </svg>
-            {matched.slice(0, 3).join(', ')}
+          <div className="relative" style={{ marginTop: '-32px', padding: '0 8px 8px' }}>
+            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-semibold"
+              style={{ background: '#1B4332', color: '#FFFFFF' }}>
+              <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22" />
+              </svg>
+              {matched.slice(0, 2).join(', ')}
+            </span>
           </div>
         )}
       </div>
-
-      {/* Content */}
-      <div className="p-4 flex flex-col flex-1 gap-2">
-        <div className="flex items-center justify-between gap-2">
-          <span className="text-xs font-semibold text-primary-600 truncate">{article.source?.name || 'Unknown'}</span>
+      <div className="p-3.5 flex flex-col flex-1">
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <span className="text-xs font-medium truncate" style={{ color: '#2D6A4F' }}>{article.source?.name || '—'}</span>
           {article.publishedAt && (
-            <span className="text-xs text-gray-400 flex-shrink-0">{timeAgo(article.publishedAt)}</span>
+            <span className="text-xs flex-shrink-0" style={{ color: '#9CA3AF' }}>{timeAgo(article.publishedAt)}</span>
           )}
         </div>
-        <h3 className="text-sm font-semibold text-gray-900 leading-snug line-clamp-3 group-hover:text-primary-600 transition-colors">
+        <p className="text-sm font-semibold leading-snug line-clamp-3" style={{ color: '#111827' }}>
           {article.title}
-        </h3>
+        </p>
         {article.description && (
-          <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed mt-auto pt-1">
+          <p className="text-xs leading-relaxed line-clamp-2 mt-auto pt-2" style={{ color: '#9CA3AF' }}>
             {article.description}
           </p>
         )}
@@ -164,21 +135,17 @@ function NewsCard({ article, heldTickers = [] }) {
   );
 }
 
-// ─── Main page ────────────────────────────────────────────────────────────────
-
 export function NewsPage({ profile }) {
   const heldTickers = (profile?.holdings || [])
-    .map(h => h.ticker?.toUpperCase())
-    .filter(Boolean);
+    .map(h => h.ticker?.toUpperCase()).filter(Boolean);
 
-  const [category, setCategory] = useState('markets');
-  const [query, setQuery] = useState('');
+  const [category, setCategory]           = useState('markets');
+  const [query, setQuery]                 = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [articles, setArticles]           = useState([]);
+  const [loading, setLoading]             = useState(true);
+  const [error, setError]                 = useState(null);
 
-  // Debounce search input
   useEffect(() => {
     const id = setTimeout(() => setDebouncedQuery(query), 500);
     return () => clearTimeout(id);
@@ -189,7 +156,6 @@ export function NewsPage({ profile }) {
     setError(null);
     const params = new URLSearchParams({ category });
     if (debouncedQuery.trim()) params.set('q', debouncedQuery.trim());
-
     fetch(`${API_BASE}/api/news?${params}`)
       .then(r => r.json())
       .then(data => {
@@ -203,111 +169,88 @@ export function NewsPage({ profile }) {
   useEffect(() => { fetchNews(); }, [fetchNews]);
 
   return (
-    <div className="py-8 space-y-6">
-    <main className="max-w-5xl mx-auto px-4 space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Financial News</h1>
-          <p className="text-gray-500 text-sm mt-1">Live headlines from markets, investing, and beyond</p>
-        </div>
-        <button
-          onClick={fetchNews}
-          disabled={loading}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors flex-shrink-0 disabled:opacity-40"
-          style={{ border: '1px solid #e2e8f0', background: '#ffffff' }}
-        >
-          <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-          Refresh
-        </button>
-      </div>
+    <main className="px-4 pt-3 space-y-4 max-w-2xl mx-auto">
 
-    </main>
+      <MarketHeatmap />
 
-      {/* Heatmap — full width */}
-      <div className="px-4">
-        <MarketHeatmap />
-      </div>
-
-    <main className="max-w-5xl mx-auto px-4 space-y-6">
-
-      {/* Search + category filter */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        {/* Search */}
+      {/* Search + Refresh */}
+      <div className="flex gap-2">
         <div className="relative flex-1">
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="#9CA3AF" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
             value={query}
             onChange={e => setQuery(e.target.value)}
             placeholder="Search any topic…"
-            className="w-full pl-9 pr-4 py-2 text-sm text-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500"
-            style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}
+            className="w-full pl-9 pr-9 py-2.5 text-sm rounded-xl"
+            style={{ background: '#FFFFFF', border: '1.5px solid #E6E9E6', color: '#111827' }}
           />
           {query && (
-            <button
-              onClick={() => setQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <button onClick={() => setQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 press-effect" style={{ color: '#9CA3AF' }}>
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           )}
         </div>
-
-        {/* Category pills */}
-        <div className="flex gap-2 overflow-x-auto pb-0.5 flex-shrink-0">
-          {CATEGORIES.map(cat => (
-            <button
-              key={cat.id}
-              onClick={() => { setCategory(cat.id); setQuery(''); }}
-              className={`px-3 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors flex-shrink-0 ${
-                category === cat.id && !debouncedQuery
-                  ? 'bg-primary-600 text-white'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-              style={category === cat.id && !debouncedQuery ? {} : { background: '#ffffff', border: '1px solid #e2e8f0' }}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
+        <button
+          onClick={fetchNews}
+          disabled={loading}
+          className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 press-effect disabled:opacity-40"
+          style={{ background: '#FFFFFF', border: '1.5px solid #E6E9E6' }}
+        >
+          <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" viewBox="0 0 24 24" stroke="#6B7280" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </button>
       </div>
 
-      {/* Error */}
+      {/* Category pills */}
+      <div className="flex gap-2 overflow-x-auto no-scrollbar">
+        {CATEGORIES.map(cat => (
+          <button
+            key={cat.id}
+            onClick={() => { setCategory(cat.id); setQuery(''); }}
+            className="flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-medium press-effect"
+            style={{
+              background: category === cat.id && !debouncedQuery ? '#1B4332' : '#FFFFFF',
+              border: `1px solid ${category === cat.id && !debouncedQuery ? '#1B4332' : '#E6E9E6'}`,
+              color: category === cat.id && !debouncedQuery ? '#FFFFFF' : '#6B7280',
+            }}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
       {error && (
-        <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-200">
-          <svg className="w-4 h-4 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <div className="flex items-center gap-2.5 px-4 py-3 rounded-xl" style={{ background: '#FEF2F2', border: '1px solid #FECACA' }}>
+          <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="#DC2626" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <p className="text-sm text-red-600">{error}</p>
+          <p className="text-sm" style={{ color: '#DC2626' }}>{error}</p>
         </div>
       )}
 
-      {/* Articles grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {loading
-          ? Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} />)
+          ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
           : articles.map((a, i) => <NewsCard key={i} article={a} heldTickers={heldTickers} />)
         }
       </div>
 
       {!loading && !error && articles.length === 0 && (
-        <div className="py-20 text-center text-gray-500">
-          <p className="text-sm">No articles found. Try a different search or category.</p>
+        <div className="py-16 text-center">
+          <p className="text-sm" style={{ color: '#9CA3AF' }}>No articles found. Try a different search or category.</p>
         </div>
       )}
 
       {!loading && articles.length > 0 && (
-        <p className="text-xs text-gray-600 text-center pb-4">
-          Powered by NewsAPI · {articles.length} articles · Data refreshes on each visit
+        <p className="text-xs text-center pb-2" style={{ color: '#C4CDC7' }}>
+          Powered by NewsAPI · {articles.length} articles
         </p>
       )}
     </main>
-    </div>
   );
 }

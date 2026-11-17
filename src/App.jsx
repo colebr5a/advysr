@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from './context/AuthContext.jsx';
-import { fetchProfile, saveProfile } from './lib/profileService.js';
+import { fetchProfile, saveProfile, fetchAiUsage, sanitizeProfile } from './lib/profileService.js';
+import { setPin, verifyPin } from './lib/apiClient.js';
 import { AuthPage } from './pages/AuthPage.jsx';
 import { LandingPage } from './pages/LandingPage.jsx';
 import { OnboardingShell } from './components/onboarding/OnboardingShell.jsx';
@@ -16,43 +17,60 @@ import { NewsPage } from './pages/NewsPage.jsx';
 
 function FullScreenSpinner() {
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: '#f8fafc' }}>
-      <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin" />
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: '#F5F3EE' }}>
+      <div
+        className="w-10 h-10 rounded-full border-2 animate-spin"
+        style={{ borderColor: '#E6E9E6', borderTopColor: '#1B4332' }}
+      />
     </div>
   );
 }
 
 export default function App() {
   const { user, isAdmin, loading: authLoading, signOut } = useAuth();
-  const [profile, setProfile]           = useState(null);
-  const [profileLoading, setProfileLoading] = useState(false);
-  const [isOnboarded, setIsOnboarded]   = useState(false);
-  const [editing, setEditing]           = useState(false);
-  const [activePage, setActivePage]     = useState('home');
-  const [pinUnlocked, setPinUnlocked]   = useState(false);
-  const [showAuth, setShowAuth]         = useState(false);
-  const [saveStatus, setSaveStatus]     = useState('idle'); // 'idle' | 'saving' | 'saved' | 'error'
-  const [lastSaved, setLastSaved]       = useState(null);
+  const [profile, setProfile]                   = useState(null);
+  const [profileLoading, setProfileLoading]     = useState(false);
+  const [isOnboarded, setIsOnboarded]           = useState(false);
+  const [editing, setEditing]                   = useState(false);
+  const [activePage, setActivePage]             = useState('home');
+  const [pinUnlocked, setPinUnlocked]           = useState(false);
+  const [showAuth, setShowAuth]                 = useState(false);
+  const [saveStatus, setSaveStatus]             = useState('idle');
+  const [lastSaved, setLastSaved]               = useState(null);
+  const [aiQueriesUsed, setAiQueriesUsed]       = useState(0);
 
-  // Load profile from Supabase when user changes
   useEffect(() => {
     if (!user) {
       setProfile(null);
       setIsOnboarded(false);
+      setAiQueriesUsed(0);
       return;
     }
     setProfileLoading(true);
+    fetchAiUsage(user.id).then(setAiQueriesUsed);
     fetchProfile(user.id)
-      .then(data => {
-        setProfile(data);
-        setIsOnboarded(data != null);
+      .then(({ profileData }) => {
+        // Drop any legacy plaintext PIN from memory; the server migrates it on first verify.
+        setProfile(sanitizeProfile(profileData));
+        setIsOnboarded(profileData != null);
       })
       .catch(console.error)
       .finally(() => setProfileLoading(false));
   }, [user]);
 
   async function handleComplete(draft) {
-    const p = { ...draft, createdAt: profile?.createdAt || new Date().toISOString() };
+    const { pin, ...rest } = draft;
+    let hasPin = !!profile?.hasPin;
+    if (pin) {
+      try {
+        const { ok } = await setPin(pin);
+        hasPin = ok || hasPin;
+        if (!ok) console.error('setPin failed');
+      } catch (err) {
+        console.error('setPin failed:', err);
+      }
+    }
+    const p = { ...rest, hasPin, createdAt: profile?.createdAt || new Date().toISOString() };
     try {
       await saveProfile(user.id, user.email, p);
     } catch (err) {
@@ -65,7 +83,7 @@ export default function App() {
   }
 
   async function handleProfileUpdate(updated) {
-    setProfile(updated); // optimistic
+    setProfile(updated);
     setSaveStatus('saving');
     try {
       await saveProfile(user.id, user.email, updated);
@@ -76,6 +94,37 @@ export default function App() {
       console.error('Save failed:', err);
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 4000);
+    }
+  }
+
+  // Usage is counted server-side; the AI endpoints report the new count back.
+  function handleAiResponse({ data }) {
+    if (typeof data?.usage?.used === 'number') setAiQueriesUsed(data.usage.used);
+  }
+
+  async function handlePinAttempt(entered) {
+    try {
+      const { ok, data } = await verifyPin(entered);
+      if (ok) { setPinUnlocked(true); return null; }
+      if (data?.code === 'pin_not_set') {
+        // Flag was set but no PIN exists server-side — nothing to unlock against.
+        setProfile(p => ({ ...p, hasPin: false }));
+        setPinUnlocked(true);
+        return null;
+      }
+      if (data?.code === 'locked') {
+        const mins = Math.max(1, Math.ceil((new Date(data.lockedUntil) - Date.now()) / 60000));
+        return `Too many attempts. Try again in ${mins} minute${mins === 1 ? '' : 's'}.`;
+      }
+      if (data?.code === 'wrong_pin') {
+        const left = data.attemptsRemaining;
+        return left > 0 && left <= 3
+          ? `Incorrect PIN. ${left} attempt${left === 1 ? '' : 's'} left.`
+          : 'Incorrect PIN. Try again.';
+      }
+      return 'Something went wrong. Try again.';
+    } catch {
+      return 'Could not reach the server. Check your connection.';
     }
   }
 
@@ -96,32 +145,24 @@ export default function App() {
     setPinUnlocked(false);
   }
 
-  // Resolving initial auth session
   if (authLoading) return <FullScreenSpinner />;
 
-  // Not logged in
   if (!user) {
     if (showAuth) return <AuthPage />;
     return <LandingPage onGetStarted={() => setShowAuth(true)} onSignIn={() => setShowAuth(true)} />;
   }
 
-  // Logged in, loading profile from Supabase
   if (profileLoading) return <FullScreenSpinner />;
 
-  // PIN lock — shown after profile loads if PIN is set and not yet unlocked this session
-  if (isOnboarded && !editing && profile?.pin && !pinUnlocked) {
+  if (isOnboarded && !editing && profile?.hasPin && !pinUnlocked) {
     return (
       <PinLock
-        onUnlock={(entered, onWrong) => {
-          if (entered === profile.pin) setPinUnlocked(true);
-          else onWrong();
-        }}
+        onUnlock={handlePinAttempt}
         onSignOut={handleLogout}
       />
     );
   }
 
-  // Needs onboarding
   if (!isOnboarded || editing) {
     return (
       <OnboardingShell
@@ -132,7 +173,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: '#f8fafc' }}>
+    <div className="min-h-screen" style={{ background: '#F5F3EE' }}>
       <NavBar
         activePage={activePage}
         onNavigate={setActivePage}
@@ -144,13 +185,21 @@ export default function App() {
         saveStatus={saveStatus}
         lastSaved={lastSaved}
       />
-      {activePage === 'home'      && <HomePage profile={profile} onProfileUpdate={handleProfileUpdate} onNavigate={setActivePage} />}
-      {activePage === 'goals'     && <GoalsPage profile={profile} onProfileUpdate={handleProfileUpdate} />}
-      {activePage === 'portfolio' && <PortfolioPage profile={profile} onProfileUpdate={handleProfileUpdate} />}
-      {activePage === 'investing' && <InvestingPage profile={profile} />}
-      {activePage === 'news'      && <NewsPage profile={profile} />}
-      {activePage === 'research'   && <ResearchPage profile={profile} />}
-      {activePage === 'admin'     && isAdmin && <AdminPage />}
+      <div className="pb-nav">
+        {activePage === 'home'      && <HomePage profile={profile} onProfileUpdate={handleProfileUpdate} onNavigate={setActivePage} />}
+        {activePage === 'goals'     && <GoalsPage profile={profile} onProfileUpdate={handleProfileUpdate} />}
+        {activePage === 'portfolio' && <PortfolioPage profile={profile} onProfileUpdate={handleProfileUpdate} />}
+        {activePage === 'investing' && <InvestingPage profile={profile} onAiResponse={handleAiResponse} />}
+        {activePage === 'news'      && <NewsPage profile={profile} />}
+        {activePage === 'research'  && (
+          <ResearchPage
+            profile={profile}
+            aiQueriesUsed={aiQueriesUsed}
+            onAiResponse={handleAiResponse}
+          />
+        )}
+        {activePage === 'admin'     && isAdmin && <AdminPage />}
+      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { monthlySurplus } from '../utils/calculations.js';
-import { API_BASE } from '../utils/api.js';
-import { FREE_LIMITS, getAiQueriesUsed } from '../lib/premiumService.js';
+import { apiFetch } from '../lib/apiClient.js';
+import { AI_QUERIES_PER_MONTH } from '../lib/usage.js';
 import { Disclaimer } from '../components/ui/Disclaimer.jsx';
 
 const SUGGESTED = [
@@ -15,7 +15,7 @@ const SUGGESTED = [
   'What are index funds and why are they popular?',
 ];
 
-export function ResearchPage({ profile, isPremium, onShowUpgrade, recordAiQuery }) {
+export function ResearchPage({ profile, aiQueriesUsed = 0, onAiResponse }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput]       = useState('');
   const [loading, setLoading]   = useState(false);
@@ -23,9 +23,10 @@ export function ResearchPage({ profile, isPremium, onShowUpgrade, recordAiQuery 
   const inputRef                = useRef(null);
   const surplus                 = Math.max(0, monthlySurplus(profile));
 
-  const queriesUsed  = getAiQueriesUsed(profile);
-  const queriesLeft  = Math.max(0, FREE_LIMITS.aiQueriesPerMonth - queriesUsed);
-  const atLimit      = !isPremium && queriesUsed >= FREE_LIMITS.aiQueriesPerMonth;
+  const queriesUsed  = aiQueriesUsed;
+  const queriesLeft  = Math.max(0, AI_QUERIES_PER_MONTH - queriesUsed);
+  const atLimit      = queriesLeft === 0;
+  const showUsage    = queriesLeft <= 10; // only surface the cap when it's close
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -33,30 +34,20 @@ export function ResearchPage({ profile, isPremium, onShowUpgrade, recordAiQuery 
 
   async function ask(question) {
     if (!question.trim() || loading) return;
-    if (atLimit) { onShowUpgrade('ai'); return; }
+    if (atLimit) return;
 
     setMessages(m => [...m, { role: 'user', text: question }]);
     setInput('');
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/api/research`, {
+      // Profile context is loaded server-side from the user's saved profile.
+      const res = await apiFetch('/api/research', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          question,
-          context: {
-            riskTolerance: profile.riskTolerance,
-            monthlyIncome: profile.monthlyIncome,
-            surplus,
-            accounts: profile.accounts || [],
-            goals: profile.goals || [],
-          },
-          history: messages.slice(-6).map(m => ({ role: m.role, content: m.text })),
-        }),
+        body: { question, history: messages.slice(-6) },
       });
-      const data = await res.json();
+      onAiResponse?.(res);
+      const { data } = res;
       setMessages(m => [...m, { role: 'assistant', text: data.answer || data.error || 'No response.' }]);
-      if (!isPremium) recordAiQuery?.();
     } catch {
       setMessages(m => [...m, { role: 'assistant', text: 'Error reaching research assistant. Try again.' }]);
     } finally {
@@ -83,22 +74,17 @@ export function ResearchPage({ profile, isPremium, onShowUpgrade, recordAiQuery 
         </div>
       </div>
 
-      {/* Usage indicator (free only) */}
-      {!isPremium && (
+      {/* Usage indicator (near the monthly cap) */}
+      {showUsage && (
         <div
           className="flex items-center justify-between px-3 py-2 rounded-xl mb-3 flex-shrink-0"
           style={{ background: atLimit ? '#FEF2F2' : '#F9F8F6', border: `1px solid ${atLimit ? '#FECACA' : '#E6E9E6'}` }}
         >
           <p className="text-xs" style={{ color: atLimit ? '#DC2626' : '#6B7280' }}>
-            {atLimit ? 'Monthly AI limit reached' : `${queriesLeft} of ${FREE_LIMITS.aiQueriesPerMonth} AI queries left this month`}
+            {atLimit
+              ? 'Monthly AI limit reached — resets on the 1st'
+              : `${queriesLeft} of ${AI_QUERIES_PER_MONTH} AI questions left this month`}
           </p>
-          <button
-            onClick={() => onShowUpgrade('ai')}
-            className="text-xs font-semibold press-effect"
-            style={{ color: '#1B4332' }}
-          >
-            Upgrade →
-          </button>
         </div>
       )}
 

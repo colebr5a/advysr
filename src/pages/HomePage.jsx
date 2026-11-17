@@ -3,7 +3,6 @@ import { CircularProgress } from '../components/ui/CircularProgress.jsx';
 import { fmt } from '../utils/formatters.js';
 import { totalExpenses, monthlySurplus } from '../utils/calculations.js';
 import { runAdviceEngine } from '../engine/adviceEngine.js';
-import { FREE_LIMITS } from '../lib/premiumService.js';
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const MONTHS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -153,7 +152,7 @@ function GettingStartedCard({ profile, onProfileUpdate, onNavigate }) {
   );
 }
 
-export function HomePage({ profile, onProfileUpdate, onNavigate, isPremium, onShowUpgrade }) {
+export function HomePage({ profile, onProfileUpdate, onNavigate }) {
   const currentMonthIndex = new Date().getMonth();
   const [activeMonth, setActiveMonth] = useState(currentMonthIndex);
   const [entryForms, setEntryForms]   = useState({});
@@ -301,13 +300,7 @@ export function HomePage({ profile, onProfileUpdate, onNavigate, isPremium, onSh
         <div className="flex items-center justify-between mb-3">
           <p className="font-semibold" style={{ color: '#111827' }}>Accounts</p>
           <button
-            onClick={() => {
-              if (!isPremium && accounts.length >= FREE_LIMITS.accounts) {
-                onShowUpgrade('accounts');
-              } else {
-                updateAccounts([...accounts, { id: `acc${++accId}`, label: 'New Account', balance: 0 }]);
-              }
-            }}
+            onClick={() => updateAccounts([...accounts, { id: `acc${++accId}`, label: 'New Account', balance: 0 }])}
             className="text-xs font-medium press-effect"
             style={{ color: '#2D6A4F' }}
           >

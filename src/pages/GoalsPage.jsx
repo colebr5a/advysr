@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
 import { CircularProgress } from '../components/ui/CircularProgress.jsx';
 import { fmt } from '../utils/formatters.js';
-import { FREE_LIMITS } from '../lib/premiumService.js';
 import { Disclaimer } from '../components/ui/Disclaimer.jsx';
 import { runMonteCarlo } from '../utils/monteCarlo.js';
 import { getRiskAssumptions } from '../utils/riskAssumptions.js';
@@ -23,7 +22,7 @@ function goalSaved(g) {
   return (g.contributions || []).reduce((s, c) => s + (c.amount || 0), 0);
 }
 
-export function GoalsPage({ profile, onProfileUpdate, isPremium, onShowUpgrade }) {
+export function GoalsPage({ profile, onProfileUpdate }) {
   const goals = useMemo(() => profile.goals || [], [profile.goals]);
   const [showAdd, setShowAdd]     = useState(false);
   const [newType, setNewType]     = useState('emergency_fund');
@@ -113,13 +112,7 @@ export function GoalsPage({ profile, onProfileUpdate, isPremium, onShowUpgrade }
 
       {/* Add Goal FAB */}
       <button
-        onClick={() => {
-          if (!isPremium && goals.length >= FREE_LIMITS.goals) {
-            onShowUpgrade('goals');
-          } else {
-            setShowAdd(true);
-          }
-        }}
+        onClick={() => setShowAdd(true)}
         className="fixed right-4 z-10 w-12 h-12 rounded-full flex items-center justify-center press-effect"
         style={{
           bottom: 'calc(64px + env(safe-area-inset-bottom, 0px) + 16px)',
@@ -133,21 +126,6 @@ export function GoalsPage({ profile, onProfileUpdate, isPremium, onShowUpgrade }
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
         </svg>
       </button>
-
-      {/* Free tier notice */}
-      {!isPremium && goals.length >= FREE_LIMITS.goals && (
-        <div
-          className="flex items-center justify-between px-3 py-2 rounded-xl"
-          style={{ background: '#F9F8F6', border: '1px solid #E6E9E6' }}
-        >
-          <p className="text-xs" style={{ color: '#6B7280' }}>
-            Free plan: {FREE_LIMITS.goals} goals max
-          </p>
-          <button onClick={() => onShowUpgrade('goals')} className="text-xs font-semibold press-effect" style={{ color: '#1B4332' }}>
-            Upgrade →
-          </button>
-        </div>
-      )}
 
       {/* Overall progress */}
       {goals.length > 0 && (

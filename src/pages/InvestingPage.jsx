@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { API_BASE } from '../utils/api.js';
+import { apiFetch } from '../lib/apiClient.js';
 import { fmt } from '../utils/formatters.js';
 import { monthlySurplus, totalExpenses } from '../utils/calculations.js';
 import { runAdviceEngine } from '../engine/adviceEngine.js';
@@ -13,7 +13,7 @@ const SUGGESTED_QUESTIONS = [
   'How do I evaluate an ETF?',
 ];
 
-function ResearchPanel({ profile, surplus }) {
+function ResearchPanel({ onAiResponse }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput]       = useState('');
   const [loading, setLoading]   = useState(false);
@@ -29,15 +29,12 @@ function ResearchPanel({ profile, surplus }) {
     setInput('');
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/api/research`, {
+      const res = await apiFetch('/api/research', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          question, history: messages,
-          context: { riskTolerance: profile.riskTolerance, monthlyIncome: profile.monthlyIncome, surplus, accounts: profile.accounts || [], goals: profile.goals || [] },
-        }),
+        body: { question, history: messages.slice(-6) },
       });
-      const data = await res.json();
+      onAiResponse?.(res);
+      const { data } = res;
       setMessages(m => [...m, { role: 'assistant', text: data.answer || data.error || 'No response.' }]);
     } catch {
       setMessages(m => [...m, { role: 'assistant', text: 'Error reaching research assistant. Try again.' }]);
@@ -220,7 +217,7 @@ const STATUS_STYLE = {
   invest: { border: '#93C5FD', bg: '#EFF6FF' },
 };
 
-export function InvestingPage({ profile }) {
+export function InvestingPage({ profile, onAiResponse }) {
   const result        = runAdviceEngine(profile);
   const investAlloc   = result.allocations.filter(a => ['stocks', 'bonds', 'cash_savings'].includes(a.ruleId));
   const investingBudget = investAlloc.reduce((s, a) => s + a.monthlyAmount, 0);
@@ -370,7 +367,7 @@ export function InvestingPage({ profile }) {
       </div>
 
       {/* Research panel */}
-      <ResearchPanel profile={profile} surplus={surplus} />
+      <ResearchPanel onAiResponse={onAiResponse} />
 
       <Disclaimer className="pb-2" />
     </main>

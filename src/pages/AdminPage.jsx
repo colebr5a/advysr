@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { Card } from '../components/ui/Card.jsx'
 import { fetchAllProfiles } from '../lib/profileService.js'
 import { fmt } from '../utils/formatters.js'
 import { totalExpenses, monthlySurplus } from '../utils/calculations.js'
@@ -13,77 +12,78 @@ function fmtRelative(iso) {
   if (!iso) return '—'
   const diff = Date.now() - new Date(iso).getTime()
   const mins = Math.floor(diff / 60000)
-  if (mins < 1) return 'Just now'
+  if (mins < 1)  return 'Just now'
   if (mins < 60) return `${mins}m ago`
   const hrs = Math.floor(mins / 60)
-  if (hrs < 24) return `${hrs}h ago`
+  if (hrs < 24)  return `${hrs}h ago`
   const days = Math.floor(hrs / 24)
-  if (days < 7) return `${days}d ago`
+  if (days < 7)  return `${days}d ago`
   return fmtDate(iso)
 }
 
-function StatCard({ label, value, color = 'text-primary-700', sub }) {
+function StatTile({ label, value, sub, accent }) {
   return (
-    <Card className="!p-5">
-      <p className="text-xs font-medium text-gray-500 mb-1">{label}</p>
-      <p className={`text-2xl font-bold ${color}`}>{value}</p>
-      {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
-    </Card>
+    <div className="rounded-2xl p-4" style={{ background: '#FFFFFF', border: '1px solid #E6E9E6' }}>
+      <p className="text-xs mb-1" style={{ color: '#9CA3AF' }}>{label}</p>
+      <p className="text-2xl font-bold" style={{ color: accent || '#111827' }}>{value}</p>
+      {sub && <p className="text-xs mt-0.5" style={{ color: '#9CA3AF' }}>{sub}</p>}
+    </div>
   )
 }
 
 function UserDetail({ row, onBack }) {
-  const p = row.profile_data
+  const p          = row.profile_data
   const expenses   = totalExpenses(p)
   const surplus    = monthlySurplus(p)
   const totalDebt  = (p.debts || []).reduce((s, d) => s + d.balance, 0)
-  const totalAssets= (p.accounts || []).reduce((s, a) => s + (a.balance || 0), 0)
+  const totalAssets = (p.accounts || []).reduce((s, a) => s + (a.balance || 0), 0)
   const netWorth   = totalAssets - totalDebt
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-8 space-y-6">
-      <button onClick={onBack} className="text-sm text-primary-600 hover:underline font-medium flex items-center gap-1">
-        ← Back to all users
+    <main className="px-4 pt-2 space-y-5 max-w-2xl mx-auto">
+      <button
+        onClick={onBack}
+        className="flex items-center gap-1.5 text-sm press-effect"
+        style={{ color: '#1B4332' }}
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+        </svg>
+        All users
       </button>
 
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-gray-900">{row.email}</h2>
-          <p className="text-gray-500 text-sm mt-0.5">
+          <p className="font-semibold text-lg" style={{ color: '#111827', wordBreak: 'break-all' }}>{row.email}</p>
+          <p className="text-xs mt-1" style={{ color: '#9CA3AF' }}>
             Joined {fmtDate(row.created_at)} · Last seen {fmtRelative(row.last_seen)}
           </p>
         </div>
-        <div className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">Onboarded</div>
+        <span className="flex-shrink-0 px-2.5 py-1 rounded-full text-xs font-medium" style={{ background: '#F0FAF4', color: '#1B4332', border: '1px solid #B7E4C7' }}>
+          Onboarded
+        </span>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <StatCard label="Monthly Income"   value={fmt(p.monthlyIncome || 0)} />
-        <StatCard label="Monthly Expenses" value={fmt(expenses)} />
-        <StatCard
-          label="Monthly Surplus"
-          value={fmt(Math.abs(surplus))}
-          color={surplus < 0 ? 'text-red-500' : 'text-green-600'}
-          sub={surplus < 0 ? 'deficit' : 'surplus'}
-        />
-        <StatCard label="Risk Tolerance" value={p.riskTolerance ? p.riskTolerance.charAt(0).toUpperCase() + p.riskTolerance.slice(1) : '—'} />
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <StatCard label="Total Assets" value={fmt(totalAssets)} />
-        <StatCard label="Total Debt"   value={fmt(totalDebt)}  color={totalDebt > 0 ? 'text-red-500' : 'text-primary-700'} />
-        <StatCard label="Net Worth"    value={fmt(netWorth)}   color={netWorth < 0 ? 'text-red-500' : 'text-primary-700'} />
-        <StatCard label="Goals"        value={(p.goals || []).length} />
+      <div className="grid grid-cols-2 gap-3">
+        <StatTile label="Monthly Income"   value={fmt(p.monthlyIncome || 0)} />
+        <StatTile label="Monthly Expenses" value={fmt(expenses)} />
+        <StatTile label="Monthly Surplus"  value={fmt(Math.abs(surplus))} sub={surplus < 0 ? 'deficit' : 'surplus'} accent={surplus < 0 ? '#DC2626' : '#1B4332'} />
+        <StatTile label="Risk Tolerance"   value={p.riskTolerance ? p.riskTolerance.charAt(0).toUpperCase() + p.riskTolerance.slice(1) : '—'} />
+        <StatTile label="Total Assets"     value={fmt(totalAssets)} />
+        <StatTile label="Total Debt"       value={fmt(totalDebt)}   accent={totalDebt > 0 ? '#DC2626' : undefined} />
+        <StatTile label="Net Worth"        value={fmt(netWorth)}    accent={netWorth < 0 ? '#DC2626' : '#1B4332'} />
+        <StatTile label="Goals"            value={(p.goals || []).length} />
       </div>
 
       {(p.accounts || []).length > 0 && (
         <div>
-          <h3 className="text-base font-semibold text-gray-900 mb-3">Accounts</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <p className="font-semibold mb-3" style={{ color: '#111827' }}>Accounts</p>
+          <div className="grid grid-cols-2 gap-2.5">
             {p.accounts.map(a => (
-              <Card key={a.id} className="!p-4">
-                <p className="text-xs text-gray-500 truncate mb-1">{a.label}</p>
-                <p className="font-bold text-primary-700">{fmt(a.balance || 0)}</p>
-              </Card>
+              <div key={a.id} className="rounded-xl p-3" style={{ background: '#FFFFFF', border: '1px solid #E6E9E6' }}>
+                <p className="text-xs truncate mb-1" style={{ color: '#9CA3AF' }}>{a.label}</p>
+                <p className="font-bold text-sm" style={{ color: '#1B4332' }}>{fmt(a.balance || 0)}</p>
+              </div>
             ))}
           </div>
         </div>
@@ -91,26 +91,27 @@ function UserDetail({ row, onBack }) {
 
       {(p.goals || []).length > 0 && (
         <div>
-          <h3 className="text-base font-semibold text-gray-900 mb-3">Goals</h3>
+          <p className="font-semibold mb-3" style={{ color: '#111827' }}>Goals</p>
           <div className="space-y-2">
             {p.goals.map(g => {
               const saved = (g.contributions || []).reduce((s, c) => s + c.amount, 0)
-              const pct = g.targetAmount > 0 ? Math.min(100, Math.round(saved / g.targetAmount * 100)) : 0
+              const pct   = g.targetAmount > 0 ? Math.min(100, Math.round(saved / g.targetAmount * 100)) : 0
               return (
-                <div key={g.id} className="flex items-center gap-4 p-3 rounded-xl" style={{ background: '#f0fdf4', border: '1px solid #B7E4C7' }}>
-                  <span className="text-lg">{g.icon || '🎯'}</span>
+                <div key={g.id} className="flex items-center gap-3 p-3.5 rounded-xl"
+                  style={{ background: '#F9F8F6', border: '1px solid #E6E9E6' }}>
+                  <span className="text-base">{g.icon || '🎯'}</span>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 text-sm truncate">{g.label}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <div className="flex-1 bg-gray-200 rounded-full h-1.5">
-                        <div className="h-1.5 rounded-full bg-primary-500" style={{ width: `${pct}%` }} />
+                    <p className="font-medium text-sm truncate" style={{ color: '#111827' }}>{g.label}</p>
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <div className="flex-1 rounded-full h-1" style={{ background: '#E6E9E6' }}>
+                        <div className="h-1 rounded-full transition-all" style={{ width: `${pct}%`, background: '#1B4332' }} />
                       </div>
-                      <span className="text-xs text-gray-500 whitespace-nowrap">{pct}%</span>
+                      <span className="text-xs flex-shrink-0" style={{ color: '#9CA3AF' }}>{pct}%</span>
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <p className="text-sm font-semibold text-primary-700">{fmt(saved)}</p>
-                    <p className="text-xs text-gray-400">of {fmt(g.targetAmount)}</p>
+                    <p className="text-sm font-semibold" style={{ color: '#1B4332' }}>{fmt(saved)}</p>
+                    <p className="text-xs" style={{ color: '#9CA3AF' }}>of {fmt(g.targetAmount)}</p>
                   </div>
                 </div>
               )
@@ -138,18 +139,19 @@ export function AdminPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin" />
+      <div className="flex items-center justify-center py-20">
+        <div className="w-8 h-8 rounded-full border-2 animate-spin"
+          style={{ borderColor: '#E6E9E6', borderTopColor: '#1B4332' }} />
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="bg-red-50 border border-red-100 rounded-2xl p-6">
-          <p className="font-semibold text-red-700">Error loading users</p>
-          <p className="text-red-600 text-sm mt-1">{error}</p>
+      <div className="px-4 pt-4 max-w-2xl mx-auto">
+        <div className="rounded-2xl p-5" style={{ background: '#FEF2F2', border: '1px solid #FECACA' }}>
+          <p className="font-semibold" style={{ color: '#DC2626' }}>Error loading users</p>
+          <p className="text-sm mt-1" style={{ color: '#DC2626' }}>{error}</p>
         </div>
       </div>
     )
@@ -157,93 +159,85 @@ export function AdminPage() {
 
   if (selected) return <UserDetail row={selected} onBack={() => setSelected(null)} />
 
-  const onboarded    = rows.filter(r => r.profile_data != null)
-  const notOnboarded = rows.filter(r => r.profile_data == null)
-
-  const filtered = rows.filter(r =>
-    !search || r.email?.toLowerCase().includes(search.toLowerCase())
-  )
-
+  const onboarded     = rows.filter(r => r.profile_data != null)
+  const notOnboarded  = rows.filter(r => r.profile_data == null)
   const recentlyActive = rows.filter(r => {
     if (!r.last_seen) return false
     return Date.now() - new Date(r.last_seen).getTime() < 7 * 24 * 60 * 60 * 1000
   }).length
 
+  const filtered = rows.filter(r =>
+    !search || r.email?.toLowerCase().includes(search.toLowerCase())
+  )
+
   return (
-    <main className="max-w-5xl mx-auto px-4 py-8 space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p className="text-gray-500 text-sm mt-1">All registered users</p>
+    <main className="px-4 pt-3 space-y-4 max-w-2xl mx-auto">
+      <div className="grid grid-cols-2 gap-3">
+        <StatTile label="Total Users"     value={rows.length} />
+        <StatTile label="Onboarded"       value={onboarded.length}    sub={`${Math.round(onboarded.length / Math.max(rows.length, 1) * 100)}% of users`} accent="#1B4332" />
+        <StatTile label="Pending"         value={notOnboarded.length} accent="#D97706" />
+        <StatTile label="Active (7 days)" value={recentlyActive}      accent="#2D6A4F" />
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <StatCard label="Total Users"      value={rows.length} />
-        <StatCard label="Onboarded"        value={onboarded.length}    color="text-green-600" sub={`${Math.round(onboarded.length / Math.max(rows.length, 1) * 100)}% of users`} />
-        <StatCard label="Not Onboarded"    value={notOnboarded.length} color="text-amber-500" />
-        <StatCard label="Active (7 days)"  value={recentlyActive}      color="text-primary-600" />
+      {/* Search */}
+      <div className="relative">
+        <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="#9CA3AF" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search by email…"
+          className="w-full pl-9 pr-4 py-2.5 text-sm rounded-xl"
+          style={{ background: '#FFFFFF', border: '1.5px solid #E6E9E6', color: '#111827' }}
+        />
       </div>
 
-      <div>
-        <div className="flex items-center gap-4 mb-4">
-          <input
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search by email..."
-            className="flex-1 max-w-sm px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-400 text-sm text-gray-900"
-            style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}
-          />
-          <span className="text-sm text-gray-500">{filtered.length} users</span>
-        </div>
-
-        <Card className="!p-0 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
-              <tr>
-                <th className="text-left px-6 py-3 font-medium text-gray-500">Email</th>
-                <th className="text-left px-6 py-3 font-medium text-gray-500">Joined</th>
-                <th className="text-left px-6 py-3 font-medium text-gray-500">Last Seen</th>
-                <th className="text-left px-6 py-3 font-medium text-gray-500">Status</th>
-                <th className="px-6 py-3" />
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-gray-400">No users found</td>
-                </tr>
+      {/* User list */}
+      <div className="space-y-2.5">
+        {filtered.length === 0 && (
+          <p className="text-center py-8 text-sm" style={{ color: '#9CA3AF' }}>No users found</p>
+        )}
+        {filtered.map(row => (
+          <div
+            key={row.id}
+            className="flex items-center gap-3 p-4 rounded-2xl press-effect"
+            style={{ background: '#FFFFFF', border: '1px solid #E6E9E6', cursor: row.profile_data ? 'pointer' : 'default' }}
+            onClick={() => row.profile_data && setSelected(row)}
+          >
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{ background: row.profile_data ? '#F0FAF4' : '#F9F8F6' }}
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke={row.profile_data ? '#1B4332' : '#9CA3AF'} strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium truncate" style={{ color: '#111827' }}>{row.email}</p>
+              <p className="text-xs mt-0.5" style={{ color: '#9CA3AF' }}>
+                {fmtDate(row.created_at)} · {fmtRelative(row.last_seen)}
+              </p>
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span
+                className="text-xs px-2 py-0.5 rounded-full"
+                style={{
+                  background: row.profile_data ? '#F0FAF4' : '#F9F8F6',
+                  color: row.profile_data ? '#1B4332' : '#9CA3AF',
+                  border: `1px solid ${row.profile_data ? '#B7E4C7' : '#E6E9E6'}`,
+                }}
+              >
+                {row.profile_data ? 'Active' : 'Pending'}
+              </span>
+              {row.profile_data && (
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="#C4CDC7" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
               )}
-              {filtered.map(row => (
-                <tr
-                  key={row.id}
-                  className="transition-colors"
-                  style={{ borderTop: '1px solid #e2e8f0' }}
-                  onMouseEnter={e => e.currentTarget.style.background = '#f0fdf4'}
-                  onMouseLeave={e => e.currentTarget.style.background = ''}
-                >
-                  <td className="px-6 py-4 font-medium text-primary-700">{row.email}</td>
-                  <td className="px-6 py-4 text-gray-500">{fmtDate(row.created_at)}</td>
-                  <td className="px-6 py-4 text-gray-500">{fmtRelative(row.last_seen)}</td>
-                  <td className="px-6 py-4">
-                    {row.profile_data
-                      ? <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">Onboarded</span>
-                      : <span className="px-2 py-0.5 bg-gray-100 text-gray-500 rounded-full text-xs font-medium">Pending</span>
-                    }
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    {row.profile_data && (
-                      <button
-                        onClick={() => setSelected(row)}
-                        className="text-xs text-primary-600 hover:underline font-medium"
-                      >
-                        View →
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </Card>
+            </div>
+          </div>
+        ))}
       </div>
     </main>
   )

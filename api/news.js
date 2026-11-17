@@ -1,3 +1,5 @@
+import { applyCors } from './_lib/cors.js';
+
 const CATEGORY_QUERIES = {
   markets:  { endpoint: 'top-headlines', params: { category: 'business', language: 'en' } },
   investing: { endpoint: 'everything',   params: { q: 'investing stocks ETF bonds', sortBy: 'publishedAt', language: 'en' } },
@@ -6,8 +8,7 @@ const CATEGORY_QUERIES = {
 };
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  if (req.method !== 'GET') return res.status(405).end();
+  if (applyCors(req, res, { methods: ['GET'] })) return;
 
   const { category = 'markets', q } = req.query;
   const apiKey = process.env.NEWS_API_KEY;

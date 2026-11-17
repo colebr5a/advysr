@@ -420,7 +420,7 @@ function BenchmarkCard({ portfolioReturn, sp500YTD, loading }) {
   );
 }
 
-export function PortfolioPage({ profile, onProfileUpdate, isPremium, onShowUpgrade }) {
+export function PortfolioPage({ profile, onProfileUpdate }) {
   const [showImport, setShowImport] = useState(false);
   const holdings = profile.holdings || [];
   const riskTolerance = profile.riskTolerance || 'moderate';
@@ -481,7 +481,7 @@ export function PortfolioPage({ profile, onProfileUpdate, isPremium, onShowUpgra
             {holdings.length} positions{importedDate ? ` · ${importedDate}` : ''}
           </p>
           <button
-            onClick={() => isPremium ? setShowImport(true) : onShowUpgrade('portfolio')}
+            onClick={() => setShowImport(true)}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium press-effect"
             style={{ border: '1.5px solid #E6E9E6', background: '#FFFFFF', color: '#374151' }}
           >
@@ -494,7 +494,7 @@ export function PortfolioPage({ profile, onProfileUpdate, isPremium, onShowUpgra
       )}
 
       {holdings.length === 0 ? (
-        <EmptyState onImport={() => isPremium ? setShowImport(true) : onShowUpgrade('portfolio')} />
+        <EmptyState onImport={() => setShowImport(true)} />
       ) : (
         <>
           {/* Summary stat cards */}

@@ -1,6 +1,7 @@
+import { applyCors } from './_lib/cors.js';
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  if (req.method !== 'GET') return res.status(405).end();
+  if (applyCors(req, res, { methods: ['GET'] })) return;
 
   try {
     const url = 'https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?interval=1d&range=ytd';
