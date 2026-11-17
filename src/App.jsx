@@ -14,6 +14,8 @@ import { AdminPage } from './pages/AdminPage.jsx';
 import { ResearchPage } from './pages/ResearchPage.jsx';
 import { PortfolioPage } from './pages/PortfolioPage.jsx';
 import { NewsPage } from './pages/NewsPage.jsx';
+import { SimulationsPage } from './pages/SimulationsPage.jsx';
+import { recordSnapshot } from './lib/snapshotService.js';
 
 function FullScreenSpinner() {
   return (
@@ -38,6 +40,7 @@ export default function App() {
   const [saveStatus, setSaveStatus]             = useState('idle');
   const [lastSaved, setLastSaved]               = useState(null);
   const [aiQueriesUsed, setAiQueriesUsed]       = useState(0);
+  const [simGoalId, setSimGoalId]               = useState(null);
 
   useEffect(() => {
     if (!user) {
@@ -57,6 +60,23 @@ export default function App() {
       .catch(console.error)
       .finally(() => setProfileLoading(false));
   }, [user]);
+
+  // Net worth history: snapshot today's balances whenever they change (debounced).
+  useEffect(() => {
+    if (!user || !profile) return undefined;
+    const t = setTimeout(() => recordSnapshot(user.id, profile), 1500);
+    return () => clearTimeout(t);
+  }, [user, profile]);
+
+  function navigate(page) {
+    if (page === 'simulations') setSimGoalId(null);
+    setActivePage(page);
+  }
+
+  function simulateGoal(goalId) {
+    setSimGoalId(goalId);
+    setActivePage('simulations');
+  }
 
   async function handleComplete(draft) {
     const { pin, ...rest } = draft;
@@ -176,7 +196,7 @@ export default function App() {
     <div className="min-h-screen" style={{ background: '#F5F3EE' }}>
       <NavBar
         activePage={activePage}
-        onNavigate={setActivePage}
+        onNavigate={navigate}
         onEditProfile={() => setEditing(true)}
         onReset={handleReset}
         onLogout={handleLogout}
@@ -187,7 +207,8 @@ export default function App() {
       />
       <div className="pb-nav">
         {activePage === 'home'      && <HomePage profile={profile} onProfileUpdate={handleProfileUpdate} onNavigate={setActivePage} />}
-        {activePage === 'goals'     && <GoalsPage profile={profile} onProfileUpdate={handleProfileUpdate} />}
+        {activePage === 'goals'     && <GoalsPage profile={profile} onProfileUpdate={handleProfileUpdate} onSimulateGoal={simulateGoal} />}
+        {activePage === 'simulations' && <SimulationsPage key={simGoalId || 'default'} profile={profile} initialGoalId={simGoalId} />}
         {activePage === 'portfolio' && <PortfolioPage profile={profile} onProfileUpdate={handleProfileUpdate} />}
         {activePage === 'investing' && <InvestingPage profile={profile} onAiResponse={handleAiResponse} />}
         {activePage === 'news'      && <NewsPage profile={profile} />}

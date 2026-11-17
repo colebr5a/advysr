@@ -2,8 +2,6 @@ import { useState, useMemo } from 'react';
 import { CircularProgress } from '../components/ui/CircularProgress.jsx';
 import { fmt } from '../utils/formatters.js';
 import { Disclaimer } from '../components/ui/Disclaimer.jsx';
-import { runMonteCarlo } from '../utils/monteCarlo.js';
-import { getRiskAssumptions } from '../utils/riskAssumptions.js';
 
 const GOAL_TYPES = [
   { type: 'emergency_fund', label: 'Emergency Fund', icon: '🛡️', defaultAmount: 15000, color: '#1B4332' },
@@ -22,41 +20,12 @@ function goalSaved(g) {
   return (g.contributions || []).reduce((s, c) => s + (c.amount || 0), 0);
 }
 
-export function GoalsPage({ profile, onProfileUpdate }) {
+export function GoalsPage({ profile, onProfileUpdate, onSimulateGoal }) {
   const goals = useMemo(() => profile.goals || [], [profile.goals]);
   const [showAdd, setShowAdd]     = useState(false);
   const [newType, setNewType]     = useState('emergency_fund');
   const [entryForms, setEntryForms] = useState({});
 
-  const { meanReturn, stdDev } = getRiskAssumptions(profile.riskTolerance);
-
-  // Projects each goal forward with a Monte Carlo simulation: assumed monthly
-  // contribution is the user's actual recent average (or, with no history yet,
-  // the pace required to hit the target on schedule), run through `months` of
-  // randomly-drawn returns at the user's risk-tolerance assumptions.
-  const projections = useMemo(() => {
-    const map = {};
-    for (const g of goals) {
-      if (!(g.targetMonths > 0)) continue;
-      const saved = goalSaved(g);
-      const contributions = g.contributions || [];
-      const monthlyContribution = contributions.length > 0
-        ? saved / contributions.length
-        : Math.max(0, (g.targetAmount - saved) / g.targetMonths);
-      map[g.id] = {
-        ...runMonteCarlo({
-          startingAmount: saved,
-          monthlyContribution,
-          months: g.targetMonths,
-          meanReturn,
-          stdDev,
-          targetAmount: g.targetAmount,
-        }),
-        monthlyContribution,
-      };
-    }
-    return map;
-  }, [goals, meanReturn, stdDev]);
 
   function updateGoals(updated) { onProfileUpdate({ ...profile, goals: updated }); }
 
@@ -227,7 +196,6 @@ export function GoalsPage({ profile, onProfileUpdate }) {
             const color    = g.color || gType.color;
             const icon     = g.icon || gType.icon;
             const form     = entryForms[g.id] || {};
-            const proj     = projections[g.id];
 
             return (
               <div
@@ -304,26 +272,19 @@ export function GoalsPage({ profile, onProfileUpdate }) {
                   </div>
                 </div>
 
-                {/* Monte Carlo projection */}
-                {proj && (() => {
-                  const chance = proj.probabilityOfSuccess;
-                  const tone = chance >= 0.66
-                    ? { bg: '#F0FAF4', fg: '#1B4332' }
-                    : chance >= 0.33
-                    ? { bg: '#FFFBEB', fg: '#B45309' }
-                    : { bg: '#FEF2F2', fg: '#B91C1C' };
-                  return (
-                    <div className="rounded-xl px-3 py-2.5 mb-3" style={{ background: tone.bg }}>
-                      <div className="flex items-center justify-between text-sm">
-                        <span style={{ color: '#6B7280' }}>Est. chance of hitting goal</span>
-                        <span className="font-semibold" style={{ color: tone.fg }}>{Math.round(chance * 100)}%</span>
-                      </div>
-                      <p className="text-xs mt-1" style={{ color: '#9CA3AF' }}>
-                        Simulated from {fmt(proj.monthlyContribution)}/mo at {Math.round(meanReturn * 100)}% avg. return — median outcome {fmt(proj.p50)}
-                      </p>
-                    </div>
-                  );
-                })()}
+                {/* Odds now live in the Simulations tab */}
+                {onSimulateGoal && g.targetMonths > 0 && (
+                  <button
+                    onClick={() => onSimulateGoal(g.id)}
+                    className="w-full flex items-center justify-between rounded-xl px-3 py-2.5 mb-3 press-effect"
+                    style={{ background: '#F0FAF4', color: '#1B4332' }}
+                  >
+                    <span className="text-sm font-medium">Simulate your odds</span>
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                  </button>
+                )}
 
                 {/* Contributions */}
                 {(g.contributions || []).length > 0 && (

@@ -20,6 +20,17 @@ const TABS = [
     ),
   },
   {
+    id: 'simulations',
+    label: 'Simulate',
+    icon: (active) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2 : 1.5} className="w-6 h-6">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 17c3-1 4.5-6 7.5-6s3.5 3 6 3S20 8 21 6" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 20.25h18" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.45" d="M3 13c3-1 4.5-4 7.5-4s3.5 1 6-1S20 4 21 3.5" />
+      </svg>
+    ),
+  },
+  {
     id: 'portfolio',
     label: 'Portfolio',
     icon: (active) => (
